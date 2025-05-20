@@ -1,0 +1,43 @@
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+
+const Navbar: React.FC = () => {
+  return (
+    <nav
+      style={{
+        display: 'flex',
+        gap: '1rem',
+        padding: '1rem',
+        borderBottom: '1px solid #ddd',
+        backgroundColor: '#fff',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+      }}
+    >
+      {[
+        { label: 'Personnages', path: '/characters' },
+        { label: 'Summon', path: '/summons' },
+        { label: 'Mes pulls', path: '/mysummons' },
+      ].map(({ label, path }) => (
+        <NavLink
+          key={path}
+          to={path}
+          style={({ isActive }) => ({
+            padding: '0.5rem 1rem',
+            borderRadius: 4,
+            textDecoration: 'none',
+            color: isActive ? 'white' : '#333',
+            backgroundColor: isActive ? '#007bff' : 'transparent',
+            fontWeight: isActive ? 'bold' : 'normal',
+            border: isActive ? 'none' : '1px solid transparent',
+          })}
+        >
+          {label}
+        </NavLink>
+      ))}
+    </nav>
+  );
+};
+
+export default Navbar;
