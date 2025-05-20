@@ -1,7 +1,7 @@
 import { Summon, PityHistory } from '../types/types';
 
 export const getSummons = (): Summon[] => {
-  const data = localStorage.getItem('summonHistory');
+  const data = localStorage.getItem('summons');
   return data ? JSON.parse(data) : [];
 };
 

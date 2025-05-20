@@ -1,4 +1,3 @@
-// src/pages/Characters.tsx
 import React, { useState } from 'react';
 import mlImages from '../data/ml.json';
 import ssrImages from '../data/ssr.json';

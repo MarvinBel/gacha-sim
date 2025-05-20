@@ -12,13 +12,13 @@ export type FolderData = {
   rate: number;
 };
 
-export type Summon = {
+export interface Summon {
   character: Character;
   banner: string;
   pityType: 'soft pity' | 'hard pity' | 'no pity';
-  pityCount: number;
-  timestamp: string;
-};
+  timestamp?: number;   
+  pityCount?: number;
+}
 
 export type PityHistory = {
   banner: string;

@@ -4,7 +4,6 @@ import ssr from '../data/ssr.json';
 import sr from '../data/sr.json';
 import r from '../data/r.json';
 
-// Utilise un helper pour typer correctement chaque tableau
 function tagFolder<T extends Omit<Character, 'folder'>>(arr: T[], folder: Character['folder']): Character[] {
   return arr.map(c => ({ ...c, folder }));
 }
