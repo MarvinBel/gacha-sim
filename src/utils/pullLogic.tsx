@@ -77,6 +77,7 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
   let pityType: PityType = 'no pity';
   if (pityCount >= 80) {
     pityType = 'hard pity';
+    pityCount = 0;
   } else if (pityCount >= 50 && (folderIndex === 0 || folderIndex === 1)) {
     pityType = 'soft pity';
   }
