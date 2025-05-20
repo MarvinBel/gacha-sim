@@ -1,76 +1,115 @@
 import { folders } from './charactersData';
-import { Summon } from '../types/types';
+import type { Summon, Character } from '../types/types';
 
-type PityType = "no pity" | "soft pity" | "hard pity";
+type Banner = 'perma' | 'ml' | 'limited';
+type PityType = 'no pity' | 'soft pity' | 'hard pity';
 
-/**
- * Tirage pondéré d'un folder selon son taux.
- */
-function getRandomFolder(): typeof folders[number] {
-  const rand = Math.random();
-  let cumulative = 0;
+interface PullResult {
+  pull: Summon;
+  newPity: number;
+}
 
-  for (const folder of folders) {
-    cumulative += folder.rate;
-    if (rand < cumulative) {
-      return folder;
+function getSoftPityBonus(pityCount: number): number {
+  if (pityCount < 50 || pityCount >= 80) return 0;
+
+  const x = pityCount - 50;
+  const maxSoftPity = 0.15;
+  const rate = (Math.log(1 + x) / Math.log(30)) * maxSoftPity;
+  return Math.min(rate, maxSoftPity);
+}
+
+export function performSinglePull(pityCount: number, banner: Banner): PullResult {
+  let baseSSR = 0.0075;
+  let baseML = 0.0025;
+
+  if (banner === 'ml') {
+    baseSSR = 0;
+    baseML = 0.01;
+  }
+
+  const baseSR = 0.15;
+  const baseR = 1 - (baseSSR + baseML + baseSR);
+
+  const softPityBonus = getSoftPityBonus(pityCount);
+
+  const totalBase = baseSSR + baseML;
+  let softSSR = 0;
+  let softML = 0;
+
+  if (totalBase > 0) {
+    softSSR = softPityBonus * (baseSSR / totalBase);
+    softML = softPityBonus * (baseML / totalBase);
+  } else {
+    softSSR = 0;
+    softML = softPityBonus;
+  }
+
+  const finalSSR = baseSSR + softSSR;
+  const finalML = baseML + softML;
+  const finalSR = baseSR;
+  const finalR = baseR;
+
+  const weights = [finalSSR, finalML, finalSR, finalR];
+
+  const ssrChars = folders.find(f => f.name === 'ssr')!.images;
+  const mlChars = folders.find(f => f.name === 'ml')!.images;
+  const srChars = folders.find(f => f.name === 'sr')!.images;
+  const rChars = folders.find(f => f.name === 'r')!.images;
+
+  const pools = [ssrChars, mlChars, srChars, rChars];
+
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+  const rand = Math.random() * totalWeight;
+  let cumWeight = 0;
+  let folderIndex = 3;
+
+  for (let i = 0; i < weights.length; i++) {
+    cumWeight += weights[i];
+    if (rand < cumWeight) {
+      folderIndex = i;
+      break;
     }
   }
 
-  // En cas de problème (arrondi), retourner le dernier folder par défaut
-  return folders[folders.length - 1];
-}
+  const selectedPool = pools[folderIndex];
+  const character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
 
-/**
- * Tirage aléatoire d'un personnage dans un folder donné.
- */
-function getRandomCharacterFromFolder(folder: typeof folders[number]): Summon['character'] {
-  const chars = folder.images;
-  const idx = Math.floor(Math.random() * chars.length);
-  return chars[idx];
-}
+  let pityType: PityType = 'no pity';
+  if (pityCount >= 80) {
+    pityType = 'hard pity';
+  } else if (pityCount >= 50 && (folderIndex === 0 || folderIndex === 1)) {
+    pityType = 'soft pity';
+  }
 
-export function performSinglePull(pityCount: number): { pull: Summon; newPity: number } {
-  const newPity = pityCount + 1;
+  const isSSRorML = folderIndex === 0 || folderIndex === 1;
+  let newPity = pityCount;
 
-  const folder = getRandomFolder();
-  const character = getRandomCharacterFromFolder(folder);
+  if ((pityType === 'soft pity' || pityType === 'hard pity') && isSSRorML) {
+    newPity = 0;
+  } else {
+    newPity++;
+  }
 
   const pull: Summon = {
     character,
-    banner: 'perma',
+    banner,
     pityCount: newPity,
-    pityType: determinePityType(newPity),
+    pityType,
     timestamp: Date.now(),
   };
 
   return { pull, newPity };
 }
 
-export function performMultiPull(pityCount: number): { pulls: Summon[]; newPity: number } {
+export function performMultiPull(pityCount: number, banner: Banner): { pulls: Summon[]; newPity: number } {
+  let pulls: Summon[] = [];
   let newPity = pityCount;
-  const pulls: Summon[] = [];
 
   for (let i = 0; i < 10; i++) {
-    newPity++;
-
-    const folder = getRandomFolder();
-    const character = getRandomCharacterFromFolder(folder);
-
-    pulls.push({
-      character,
-      banner: 'perma',
-      pityCount: newPity,
-      pityType: determinePityType(newPity),
-      timestamp: Date.now(),
-    });
+    const { pull, newPity: updatedPity } = performSinglePull(newPity, banner);
+    pulls.push(pull);
+    newPity = updatedPity;
   }
 
   return { pulls, newPity };
-}
-
-function determinePityType(pityCount: number): PityType {
-  if (pityCount >= 80) return "hard pity";
-  if (pityCount >= 50) return "soft pity";
-  return "no pity";
 }

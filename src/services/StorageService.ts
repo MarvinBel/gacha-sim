@@ -35,3 +35,17 @@ export const getPityHistory = (): PityHistory[] => {
   const data = localStorage.getItem('pity-history');
   return data ? JSON.parse(data) : [];
 };
+
+export async function loadAllSummons(): Promise<Summon[]> {
+  try {
+    const data = localStorage.getItem('summons');
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error('Erreur lors du chargement des summons :', error);
+    return [];
+  }
+}
+
+export function clearSummons() {
+  localStorage.removeItem('summons');
+}

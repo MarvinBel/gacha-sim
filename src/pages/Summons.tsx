@@ -3,36 +3,41 @@ import { performSinglePull, performMultiPull } from '../utils/pullLogic';
 import { saveSummon } from '../services/StorageService';
 import { Summon } from '../types/types';
 
-type SummonType = 'Limited' | 'Perma' | 'ML';
-
 const Summons: React.FC = () => {
   const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
   const [pityCounter, setPityCounter] = useState<number>(0);
-  const [selectedType, setSelectedType] = useState<SummonType | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
 
-  // Tirage simple
-  const handlePull = () => {
-    const { pull, newPity } = performSinglePull(pityCounter);
+  // Convertit la sélection en banner valide pour le pull
+  const banner = (selectedType === 'Perma' || selectedType === 'ML' || selectedType === 'Limited')
+    ? selectedType.toLowerCase() as 'perma' | 'ml' | 'limited'
+    : 'perma';
+
+  const handlePullX1 = () => {
+    const { pull, newPity } = performSinglePull(pityCounter, banner);
     setCurrentPulls([pull]);
     setPityCounter(newPity);
-    saveSummon(pull);
+    saveToLocalStorage([pull]);
   };
 
-  // Tirage x10
   const handlePullX10 = () => {
-    const { pulls, newPity } = performMultiPull(pityCounter);
+    const { pulls, newPity } = performMultiPull(pityCounter, banner);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
-    pulls.forEach(summon => saveSummon(summon));
+    saveToLocalStorage(pulls);
+  };
+
+  const saveToLocalStorage = (summons: Summon[]) => {
+    summons.forEach(summon => saveSummon(summon));
   };
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <aside style={{ width: '20%', padding: '1rem', backgroundColor: '#f0f0f0' }}>
+      <aside style={{ width: '5%', padding: '1rem', backgroundColor: '#f0f0f0' }}>
         {['Limited', 'Perma', 'ML'].map(type => (
           <button
             key={type}
-            onClick={() => setSelectedType(type as SummonType)}
+            onClick={() => setSelectedType(type)}
             style={{
               display: 'block',
               marginBottom: '1rem',
@@ -62,10 +67,14 @@ const Summons: React.FC = () => {
         {selectedType ? (
           <>
             <h2>{selectedType} Summon</h2>
+
+            {/* Affichage du compteur de pity */}
+            <p style={{ marginBottom: '1rem', fontWeight: 'bold', fontSize: '1.1rem' }}>
+              Compteur de pity actuel : {pityCounter}
+            </p>
+
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-              <button onClick={handlePull} style={buttonStyle}>
-                Pull x1
-              </button>
+              <button onClick={handlePullX1} style={buttonStyle}>Pull x1</button>
               <button onClick={handlePullX10} style={{ ...buttonStyle, backgroundColor: '#28a745' }}>
                 Pull x10
               </button>
@@ -73,17 +82,56 @@ const Summons: React.FC = () => {
 
             {currentPulls.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
-                {currentPulls.map((pull, idx) => (
-                  <div key={`${pull.timestamp}-${idx}`} style={{ textAlign: 'center', width: 120 }}>
-                    <img
-                      src={`/characters/${pull.character.folder}/${pull.character.filename}`}
-                      alt={pull.character.title}
-                      style={{ width: 120, height: 120, objectFit: 'contain', borderRadius: 8 }}
-                    />
-                    <p style={{ margin: 4 }}>{pull.character.title}</p>
-                    <small style={{ fontStyle: 'italic', color: '#555' }}>{pull.pityType}</small>
-                  </div>
-                ))}
+                {currentPulls.map((pull, idx) => {
+                  let pityColor = '#000';
+                  if (pull.pityType === 'soft pity') pityColor = 'orange';
+                  else if (pull.pityType === 'hard pity') pityColor = 'red';
+
+                  const showPityLabel = pull.pityType !== 'no pity';
+
+                  return (
+                    <div
+                      key={`${pull.timestamp}-${idx}`}
+                      style={{
+                        width: 120,
+                        textAlign: 'center',
+                        border: `2px solid ${showPityLabel ? pityColor : '#ddd'}`,
+                        backgroundColor : (pull.character.folder === "ssr") || (pull.character.folder === "ml") ? "yellow" : (pull.character.folder === "sr") ? "violet" : 'lightblue',
+                        borderRadius: 8,
+                        padding: 8,
+                        boxShadow: '1px 1px 5px rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      <img
+                        src={`/characters/${pull.character.folder}/${pull.character.filename}`}
+                        alt={pull.character.title}
+                        style={{ width: '100%', height: 120, objectFit: 'contain', borderRadius: 6 }}
+                      />
+                      <p
+                        style={{
+                          margin: 4,
+                          color: showPityLabel ? pityColor : undefined,
+                          fontWeight: showPityLabel ? 'bold' : undefined,
+                        }}
+                      >
+                        {pull.character.title}
+                      </p>
+                      {showPityLabel && (
+                        <p
+                          style={{
+                            marginTop: 6,
+                            fontWeight: 'bold',
+                            fontSize: '1.2rem',
+                            color: pityColor,
+                            textTransform: 'capitalize',
+                          }}
+                        >
+                          {pull.pityType}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </>
