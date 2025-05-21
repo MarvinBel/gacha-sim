@@ -11,144 +11,176 @@ interface PullResult {
 
 function getSoftPityBonus(pityCount: number): number {
   if (pityCount < 50 || pityCount >= 80) return 0;
-
   const x = pityCount - 50;
   const maxSoftPity = 0.15;
   const rate = (Math.log(1 + x) / Math.log(30)) * maxSoftPity;
   return Math.min(rate, maxSoftPity);
 }
 
+function getCharactersByFolderName(name: string): Character[] {
+  const folder = folders.find(f => f.name === name);
+  if (!folder) throw new Error(`Folder "${name}" not found`);
+  return folder.images;
+}
+
+function randomItem<T>(array: T[]): T {
+  if (!array || array.length === 0) {
+    throw new Error("Attempted to pick random item from empty or undefined array");
+  }
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 export function performSinglePull(pityCount: number, banner: Banner): PullResult {
-  let baseSSR = 0.0075;
-  let baseML = 0.0025;
-  let character;
-
-  if (banner === 'ml') {
-    baseSSR = 0;
-    baseML = 0.01;
-  }
-
-  const baseSR = 0.15;
-  const baseR = 1 - (baseSSR + baseML + baseSR);
-
-  const softPityBonus = getSoftPityBonus(pityCount);
-
-  const totalBase = baseSSR + baseML;
-  let softSSR = 0;
-  let softML = 0;
-
-  if (totalBase > 0) {
-    softSSR = softPityBonus * (baseSSR / totalBase);
-    softML = softPityBonus * (baseML / totalBase);
-  } else {
-    softSSR = 0;
-    softML = softPityBonus;
-  }
-
-  const finalSSR = baseSSR + softSSR;
-  const finalML = baseML + softML;
-  const finalSR = baseSR;
-  const finalR = baseR;
-
-  const weights = [finalSSR, finalML, finalSR, finalR];
-
-  const ssrChars = folders.find(f => f.name === 'ssr')!.images;
-  const mlChars = folders.find(f => f.name === 'ml')!.images;
-  const srChars = folders.find(f => f.name === 'sr')!.images;
-  const rChars = folders.find(f => f.name === 'r')!.images;
-
-  const pools = [ssrChars, mlChars, srChars, rChars];
-  const hardPityPermaPool = [ssrChars, mlChars];
-  const hardPityMLPool = [mlChars];
-
-  const totalWeight = weights.reduce((a, b) => a + b, 0);
-  const rand = Math.random() * totalWeight;
-  let cumWeight = 0;
-  let folderIndex = 3;
-
-  for (let i = 0; i < weights.length; i++) {
-    cumWeight += weights[i];
-    if (rand < cumWeight) {
-      folderIndex = i;
-      break;
-    }
-  }
-  if (pityCount != 80) {
-    const selectedPool = pools[folderIndex];
-    character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
-  }
-  else if (pityCount === 80 && banner === 'ml') {
-    const selectedPool = hardPityMLPool[0];
-    character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
-  }
-  else {
-    const selectedPool = hardPityPermaPool[1];
-    character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
-  }
-
+  let character: Character;
   let pityType: PityType = 'no pity';
-  if (pityCount >= 80) {
-    pityType = 'hard pity';
-    pityCount = 0;
-  } else if (pityCount >= 50 && (folderIndex === 0 || folderIndex === 1)) {
-    pityType = 'soft pity';
-  }
 
-  const isSSRorML = folderIndex === 0 || folderIndex === 1;
-  let newPity = pityCount;
-  console.log('isSSRorML : ', isSSRorML);
-  if ((pityType === 'soft pity' || pityType === 'hard pity') || isSSRorML) {
-    newPity = 0;
+  const ssrChars = getCharactersByFolderName('ssr');
+  const mlChars = getCharactersByFolderName('ml');
+  const srChars = getCharactersByFolderName('sr');
+  const rChars = getCharactersByFolderName('r');
+
+  const freya = ssrChars.find(c => c.title === 'Freya');
+  if (!freya) throw new Error('Freya not found in SSR characters');
+
+  if (banner === 'limited') {
+    const baseFreya = 0.01;
+    const srRate = 0.15;
+
+    const bonusFreya = getSoftPityBonus(pityCount); // max +15%
+    const finalFreya = baseFreya + bonusFreya;
+
+    const rRate = 1 - finalFreya - srRate;
+
+    if (pityCount >= 80) {
+      character = freya;
+      pityType = 'hard pity';
+      pityCount = 0;
+    } else {
+      const rand = Math.random();
+      if (rand < finalFreya) {
+        character = freya;
+        pityType = pityCount >= 50 ? 'soft pity' : 'no pity';
+        pityCount = 0;
+      } else if (rand < finalFreya + srRate) {
+        character = randomItem(srChars);
+        pityCount++;
+      } else {
+        character = randomItem(rChars);
+        pityCount++;
+      }
+    }
   } else {
-    newPity++;
+    // perma / ml logic
+    let baseSSR = 0.0075;
+    let baseML = 0.0025;
+    const baseSR = 0.15;
+    const baseR = 1 - (baseSSR + baseML + baseSR);
+
+    if (banner === 'ml') {
+      baseSSR = 0;
+      baseML = 0.01;
+    }
+
+    const softPityBonus = getSoftPityBonus(pityCount);
+    const totalBase = baseSSR + baseML;
+
+    let softSSR = 0;
+    let softML = 0;
+
+    if (totalBase > 0) {
+      softSSR = softPityBonus * (baseSSR / totalBase);
+      softML = softPityBonus * (baseML / totalBase);
+    } else {
+      softML = softPityBonus;
+    }
+
+    const finalSSR = baseSSR + softSSR;
+    const finalML = baseML + softML;
+
+    const weights = [finalSSR, finalML, baseSR, baseR];
+    const pools = [ssrChars, mlChars, srChars, rChars];
+
+    const totalWeight = weights.reduce((a, b) => a + b, 0);
+    const rand = Math.random() * totalWeight;
+
+    let cumWeight = 0;
+    let folderIndex = 3;
+
+    for (let i = 0; i < weights.length; i++) {
+      cumWeight += weights[i];
+      if (rand < cumWeight) {
+        folderIndex = i;
+        break;
+      }
+    }
+
+    if (banner === 'ml' && pityCount >= 80) {
+      character = randomItem(mlChars);
+      pityType = 'hard pity';
+      pityCount = 0;
+    } else if (banner === 'perma' && pityCount >= 80) {
+      const hardPityPool = ssrChars.concat(mlChars);
+      character = randomItem(hardPityPool);
+      pityType = 'hard pity';
+      pityCount = 0;
+    } else {
+      character = randomItem(pools[folderIndex]);
+
+      if (pityCount >= 50 && (folderIndex === 0 || folderIndex === 1)) {
+        pityType = 'soft pity';
+        pityCount = 0;
+      } else if (folderIndex === 0 || folderIndex === 1) {
+        pityCount = 0;
+      } else {
+        pityCount += 1;
+      }
+    }
   }
 
   const pull: Summon = {
     character,
     banner,
-    pityCount: newPity,
+    pityCount,
     pityType,
     timestamp: Date.now(),
   };
-  window.localStorage.setItem('summonCount', window.localStorage.getItem('summonCount') ? (parseInt(window.localStorage.getItem('summonCount')!) + 1).toString() : '1');
-  return { pull, newPity };
+
+  const count = parseInt(localStorage.getItem('summonCount') || '0', 10);
+  localStorage.setItem('summonCount', (count + 1).toString());
+
+  return { pull, newPity: pityCount };
 }
 
+
 export function performMultiPull(pityCount: number, banner: Banner): { pulls: Summon[]; newPity: number } {
-  let pulls: Summon[] = [];
+  const pulls: Summon[] = [];
   let newPity = pityCount;
-
   for (let i = 0; i < 10; i++) {
-    const { pull, newPity: updatedPity } = performSinglePull(newPity, banner);
+    const { pull, newPity: updated } = performSinglePull(newPity, banner);
     pulls.push(pull);
-    newPity = updatedPity;
+    newPity = updated;
   }
-
   return { pulls, newPity };
 }
 
 export function perform85Pull(pityCount: number, banner: Banner): { pulls: Summon[]; newPity: number } {
-  let pulls: Summon[] = [];
+  const pulls: Summon[] = [];
   let newPity = pityCount;
-
   for (let i = 0; i < 85; i++) {
-    const { pull, newPity: updatedPity } = performSinglePull(newPity, banner);
+    const { pull, newPity: updated } = performSinglePull(newPity, banner);
     pulls.push(pull);
-    newPity = updatedPity;
+    newPity = updated;
   }
-
   return { pulls, newPity };
 }
 
 export function performCustomPull(pityCount: number, banner: Banner, custom: number): { pulls: Summon[]; newPity: number } {
-  let pulls: Summon[] = [];
+  const pulls: Summon[] = [];
   let newPity = pityCount;
-
   for (let i = 0; i < custom; i++) {
-    const { pull, newPity: updatedPity } = performSinglePull(newPity, banner);
+    const { pull, newPity: updated } = performSinglePull(newPity, banner);
     pulls.push(pull);
-    newPity = updatedPity;
+    newPity = updated;
   }
-
   return { pulls, newPity };
 }
