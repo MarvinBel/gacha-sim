@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { performSinglePull, performMultiPull, perform85Pull, performCustomPull } from '../utils/pullLogic';
-import { saveSummon } from '../services/StorageService';
+import { saveSummon, getSummons, clearSummons } from '../services/StorageService';
 import { Summon } from '../types/types';
 
 const Summons: React.FC = () => {
@@ -56,6 +56,12 @@ const Summons: React.FC = () => {
       setCustom(0);
     }
   };
+    const handleClearSummons = () => {
+      clearSummons();
+      setCurrentPulls([]);
+      setPityCounter(0);
+    };
+  
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -116,10 +122,24 @@ const Summons: React.FC = () => {
               <button onClick={handlePullCustom} style={{ ...buttonStyle, backgroundColor: 'red' }}>
                 Pull {custom}
               </button>
+                      <button
+          onClick={handleClearSummons}
+          style={{
+            padding: '0.5rem 1rem',
+            borderRadius: 6,
+            border: 'none',
+            cursor: 'pointer',
+            backgroundColor: '#dc3545',
+            color: 'white',
+            flexGrow: 1,
+          }}
+        >
+          Supprimer tous les summons
+        </button>
             </div>
 
             {currentPulls.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', overflowY: 'auto'}}>
                 {currentPulls.map((pull, idx) => {
                   let pityColor = '#000';
                   if (pull.pityType === 'soft pity') pityColor = 'orange';
