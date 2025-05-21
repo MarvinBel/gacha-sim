@@ -6,13 +6,19 @@ import { Summon } from '../types/types';
 const Summons: React.FC = () => {
   const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
   const [pityCounter, setPityCounter] = useState<number>(0);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [custom, setCustom] = useState<number>(0);
+  const [selectedType, setSelectedType] = useState<string | null>("Perma");
+  const [custom, setCustom] = useState<number>(300);
+  const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
+
 
   // Convertit la sélection en banner valide pour le pull
   const banner = (selectedType === 'Perma' || selectedType === 'ML' || selectedType === 'Limited')
     ? selectedType.toLowerCase() as 'perma' | 'ml' | 'limited'
     : 'perma';
+
+  const displayedSummons = showSSRAndMLOnly
+    ? currentPulls.filter(s => s.character.folder === 'ssr' || s.character.folder === 'ml')
+    : currentPulls;
 
   const handlePullX1 = () => {
     const { pull, newPity } = performSinglePull(pityCounter, banner);
@@ -28,14 +34,14 @@ const Summons: React.FC = () => {
     saveToLocalStorage(pulls);
   };
 
-    const handlePullX85 = () => {
+  const handlePullX85 = () => {
     const { pulls, newPity } = perform85Pull(pityCounter, banner);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
     saveToLocalStorage(pulls);
   };
 
-    const handlePullCustom = () => {
+  const handlePullCustom = () => {
     const { pulls, newPity } = performCustomPull(pityCounter, banner, custom);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
@@ -46,7 +52,7 @@ const Summons: React.FC = () => {
     summons.forEach(summon => saveSummon(summon));
   };
 
-    const handleChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
     const numberValue = parseInt(value, 10);
@@ -56,12 +62,12 @@ const Summons: React.FC = () => {
       setCustom(0);
     }
   };
-    const handleClearSummons = () => {
-      clearSummons();
-      setCurrentPulls([]);
-      setPityCounter(0);
-    };
-  
+  const handleClearSummons = () => {
+    clearSummons();
+    setCurrentPulls([]);
+    setPityCounter(0);
+  };
+
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -112,35 +118,47 @@ const Summons: React.FC = () => {
               <button onClick={handlePullX85} style={{ ...buttonStyle, backgroundColor: 'red' }}>
                 Pull x85
               </button>
-                      <input
-          type="number"
-          value={custom}
-          onChange={handleChangeCustom}
-          min={0}
-          style={{ width: '80px' }}
-        />
+              <input
+                type="number"
+                value={custom}
+                onChange={handleChangeCustom}
+                min={0}
+                style={{ width: '80px' }}
+              />
               <button onClick={handlePullCustom} style={{ ...buttonStyle, backgroundColor: 'red' }}>
                 Pull {custom}
               </button>
-                      <button
-          onClick={handleClearSummons}
-          style={{
-            padding: '0.5rem 1rem',
-            borderRadius: 6,
-            border: 'none',
-            cursor: 'pointer',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            flexGrow: 1,
-          }}
-        >
-          Supprimer tous les summons
-        </button>
+              <button
+                onClick={handleClearSummons}
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: 6,
+                  border: 'none',
+                  cursor: 'pointer',
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  flexGrow: 1,
+                }}
+              >
+                Supprimer tous les summons
+              </button>
             </div>
-
-            {currentPulls.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', overflowY: 'auto'}}>
-                {currentPulls.map((pull, idx) => {
+            <button
+              onClick={() => setShowSSRAndMLOnly(!showSSRAndMLOnly)}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: 6,
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: showSSRAndMLOnly ? '#007bff' : '#ccc',
+                color: 'white',
+              }}
+            >
+              {showSSRAndMLOnly ? 'Afficher tous les summons' : 'Afficher seulement SSR & ML'}
+            </button>
+            {displayedSummons.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', overflowY: 'auto' }}>
+                {displayedSummons.map((pull, idx) => {
                   let pityColor = '#000';
                   if (pull.pityType === 'soft pity') pityColor = 'orange';
                   else if (pull.pityType === 'hard pity') pityColor = 'red';
@@ -154,11 +172,11 @@ const Summons: React.FC = () => {
                         width: 120,
                         textAlign: 'center',
                         border: `2px solid ${showPityLabel ? pityColor : '#ddd'}`,
-                        backgroundColor : (pull.character.folder === "ssr") || (pull.character.folder === "ml") ? "yellow" : (pull.character.folder === "sr") ? "violet" : 'lightblue',
+                        backgroundColor: (pull.character.folder === "ssr") || (pull.character.folder === "ml") ? "yellow" : (pull.character.folder === "sr") ? "violet" : 'lightblue',
                         borderRadius: 8,
                         padding: 8,
                         boxShadow: '1px 1px 5px rgba(0,0,0,0.1)',
-                        
+
                       }}
                     >
                       <img
