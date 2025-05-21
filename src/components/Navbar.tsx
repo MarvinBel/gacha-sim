@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
+  
   return (
     <nav
       style={{
@@ -9,7 +10,8 @@ const Navbar: React.FC = () => {
         gap: '1rem',
         padding: '1rem',
         borderBottom: '1px solid #ddd',
-        backgroundColor: '#fff',
+        backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
+        color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
         position: 'sticky',
         top: 0,
         zIndex: 1000,
@@ -28,7 +30,7 @@ const Navbar: React.FC = () => {
             padding: '0.5rem 1rem',
             borderRadius: 4,
             textDecoration: 'none',
-            color: isActive ? 'white' : '#333',
+            color: isActive ? 'white' : window.localStorage.getItem('theme') === 'dark' ? 'white' : '#333',
             backgroundColor: isActive ? '#007bff' : 'transparent',
             fontWeight: isActive ? 'bold' : 'normal',
             border: isActive ? 'none' : '1px solid transparent',

@@ -71,7 +71,8 @@ const Summons: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <aside style={{ width: '5%', padding: '1rem', backgroundColor: '#f0f0f0' }}>
+      <aside style={{ width: '5%', padding: '1rem',         backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
+        color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000', }}>
         {['Limited', 'Perma', 'ML'].map(type => (
           <button
             key={type}
@@ -84,7 +85,8 @@ const Summons: React.FC = () => {
               fontSize: '1rem',
               borderRadius: 6,
               border: selectedType === type ? '2px solid #007bff' : '1px solid #ccc',
-              backgroundColor: selectedType === type ? '#cce4ff' : 'white',
+                      backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
+        color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
               cursor: 'pointer',
             }}
           >

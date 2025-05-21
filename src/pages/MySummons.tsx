@@ -32,10 +32,10 @@ const MySummons: React.FC = () => {
           style={{
             padding: '0.5rem 1rem',
             borderRadius: 6,
-            border: 'none',
             cursor: 'pointer',
-            backgroundColor: showSSRAndMLOnly ? '#007bff' : '#ccc',
-            color: 'white',
+            backgroundColor: showSSRAndMLOnly ? '#007bff' : window.localStorage.getItem('theme') === 'dark' ? "black" :'#ddd',
+            border: window.localStorage.getItem('theme') === 'dark' ? "2px solid #ddd" : "none",
+            color:  window.localStorage.getItem('theme') === 'dark' ? "#ddd" :'black',
             flexGrow: 1,
           }}
         >
@@ -76,7 +76,8 @@ const MySummons: React.FC = () => {
                 width: 120,
                 textAlign: 'center',
                 border: `2px solid ${showPityLabel ? pityColor : '#ddd'}`,
-                backgroundColor : (summon.character.folder === "ssr") || (summon.character.folder === "ml") ? "yellow" : '#ddd',
+                backgroundColor : (summon.character.folder === "ssr") || (summon.character.folder === "ml") ? "yellow" : "lightblue",
+                color:  'black',
                 borderRadius: 8,
                 padding: 8,
                 boxShadow: '1px 1px 5px rgba(0,0,0,0.1)',
