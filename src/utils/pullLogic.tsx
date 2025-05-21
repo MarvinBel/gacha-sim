@@ -96,8 +96,8 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
 
   const isSSRorML = folderIndex === 0 || folderIndex === 1;
   let newPity = pityCount;
-
-  if ((pityType === 'soft pity' || pityType === 'hard pity') && isSSRorML) {
+  console.log('isSSRorML : ', isSSRorML);
+  if ((pityType === 'soft pity' || pityType === 'hard pity') || isSSRorML) {
     newPity = 0;
   } else {
     newPity++;
@@ -110,7 +110,6 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
     pityType,
     timestamp: Date.now(),
   };
-
   return { pull, newPity };
 }
 
