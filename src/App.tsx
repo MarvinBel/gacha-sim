@@ -8,6 +8,9 @@ const App: React.FC = () => {
     if (!localStorage.getItem("summonCount")) {
       localStorage.setItem("summonCount", "0");
     }
+        if (!localStorage.getItem("theme")) {
+      localStorage.setItem("theme", "dark");
+    }
   }, []);
 
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
