@@ -84,10 +84,10 @@ const DragDropJSON: React.FC = () => {
 
   const setUpDragableItem = () => {
     const arrayCharacter: ItemType[] = [];
-    mlImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/ML/${item.filename}`, type: TypePersoFilter.ML}))
-    ssrImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/SSR/${item.filename}`, type: TypePersoFilter.SSR_RGB}))
-    srImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/SR/${item.filename}`, type: TypePersoFilter.SR}))
-    rImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/R/${item.filename}`, type: TypePersoFilter.R}))
+    mlImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/ml/${item.filename}`, type: TypePersoFilter.ML}))
+    ssrImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/ssr/${item.filename}`, type: TypePersoFilter.SSR_RGB}))
+    srImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/sr/${item.filename}`, type: TypePersoFilter.SR}))
+    rImages.forEach(item => arrayCharacter.push({name: item.title, image_path: `/characters/r/${item.filename}`, type: TypePersoFilter.R}))
 
     setDraggableItems(arrayCharacter);
   }
