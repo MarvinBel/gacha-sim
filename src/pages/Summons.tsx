@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { performSinglePull, performMultiPull } from '../utils/pullLogic';
+import { performSinglePull, performMultiPull, perform85Pull, performCustomPull } from '../utils/pullLogic';
 import { saveSummon } from '../services/StorageService';
 import { Summon } from '../types/types';
 
@@ -7,6 +7,7 @@ const Summons: React.FC = () => {
   const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
   const [pityCounter, setPityCounter] = useState<number>(0);
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [custom, setCustom] = useState<number>(0);
 
   // Convertit la sélection en banner valide pour le pull
   const banner = (selectedType === 'Perma' || selectedType === 'ML' || selectedType === 'Limited')
@@ -27,8 +28,33 @@ const Summons: React.FC = () => {
     saveToLocalStorage(pulls);
   };
 
+    const handlePullX85 = () => {
+    const { pulls, newPity } = perform85Pull(pityCounter, banner);
+    setCurrentPulls(pulls);
+    setPityCounter(newPity);
+    saveToLocalStorage(pulls);
+  };
+
+    const handlePullCustom = () => {
+    const { pulls, newPity } = performCustomPull(pityCounter, banner, custom);
+    setCurrentPulls(pulls);
+    setPityCounter(newPity);
+    saveToLocalStorage(pulls);
+  };
+
   const saveToLocalStorage = (summons: Summon[]) => {
     summons.forEach(summon => saveSummon(summon));
+  };
+
+    const handleChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    const numberValue = parseInt(value, 10);
+    if (!isNaN(numberValue)) {
+      setCustom(numberValue);
+    } else if (value === '') {
+      setCustom(0);
+    }
   };
 
   return (
@@ -68,7 +94,6 @@ const Summons: React.FC = () => {
           <>
             <h2>{selectedType} Summon</h2>
 
-            {/* Affichage du compteur de pity */}
             <p style={{ marginBottom: '1rem', fontWeight: 'bold', fontSize: '1.1rem' }}>
               Compteur de pity actuel : {pityCounter}
             </p>
@@ -77,6 +102,19 @@ const Summons: React.FC = () => {
               <button onClick={handlePullX1} style={buttonStyle}>Pull x1</button>
               <button onClick={handlePullX10} style={{ ...buttonStyle, backgroundColor: '#28a745' }}>
                 Pull x10
+              </button>
+              <button onClick={handlePullX85} style={{ ...buttonStyle, backgroundColor: 'red' }}>
+                Pull x85
+              </button>
+                      <input
+          type="number"
+          value={custom}
+          onChange={handleChangeCustom}
+          min={0}
+          style={{ width: '80px' }}
+        />
+              <button onClick={handlePullCustom} style={{ ...buttonStyle, backgroundColor: 'red' }}>
+                Pull {custom}
               </button>
             </div>
 
@@ -100,6 +138,7 @@ const Summons: React.FC = () => {
                         borderRadius: 8,
                         padding: 8,
                         boxShadow: '1px 1px 5px rgba(0,0,0,0.1)',
+                        
                       }}
                     >
                       <img

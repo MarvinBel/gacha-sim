@@ -114,3 +114,29 @@ export function performMultiPull(pityCount: number, banner: Banner): { pulls: Su
 
   return { pulls, newPity };
 }
+
+export function perform85Pull(pityCount: number, banner: Banner): { pulls: Summon[]; newPity: number } {
+  let pulls: Summon[] = [];
+  let newPity = pityCount;
+
+  for (let i = 0; i < 85; i++) {
+    const { pull, newPity: updatedPity } = performSinglePull(newPity, banner);
+    pulls.push(pull);
+    newPity = updatedPity;
+  }
+
+  return { pulls, newPity };
+}
+
+export function performCustomPull(pityCount: number, banner: Banner, custom: number): { pulls: Summon[]; newPity: number } {
+  let pulls: Summon[] = [];
+  let newPity = pityCount;
+
+  for (let i = 0; i < custom; i++) {
+    const { pull, newPity: updatedPity } = performSinglePull(newPity, banner);
+    pulls.push(pull);
+    newPity = updatedPity;
+  }
+
+  return { pulls, newPity };
+}

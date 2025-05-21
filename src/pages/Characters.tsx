@@ -3,6 +3,7 @@ import mlImages from '../data/ml.json';
 import ssrImages from '../data/ssr.json';
 import srImages from '../data/sr.json';
 import rImages from '../data/r.json';
+import "./Characters.css";
 
 const folders = [
   { name: 'ml', images: mlImages },
@@ -33,36 +34,15 @@ const Characters: React.FC = () => {
       {folders.map(({ name, images }) => (
         <section
           key={name}
-          style={{
-            border: '1px solid #ccc',
-            borderRadius: 8,
-            padding: '0.5rem',
-            marginBottom: '1rem',
-          }}
+          className="charBorders"
         >
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'pointer',
-              userSelect: 'none',
-              marginBottom: '0.5rem',
-            }}
+            className='charSectionTitleCont'
             onClick={() => toggleSection(name)}
           >
             <button
               aria-label={`${openSections[name] ? 'Fermer' : 'Ouvrir'} la section ${name}`}
-              style={{
-                marginRight: 8,
-                fontSize: '1.25rem',
-                lineHeight: 1,
-                width: 28,
-                height: 28,
-                borderRadius: 4,
-                border: '1px solid #888',
-                background: 'white',
-                cursor: 'pointer',
-              }}
+              className='charDrawerButton'
             >
               {openSections[name] ? '−' : '+'}
             </button>
