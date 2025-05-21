@@ -21,6 +21,7 @@ function getSoftPityBonus(pityCount: number): number {
 export function performSinglePull(pityCount: number, banner: Banner): PullResult {
   let baseSSR = 0.0075;
   let baseML = 0.0025;
+  let character;
 
   if (banner === 'ml') {
     baseSSR = 0;
@@ -57,6 +58,8 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
   const rChars = folders.find(f => f.name === 'r')!.images;
 
   const pools = [ssrChars, mlChars, srChars, rChars];
+  const hardPityPermaPool = [ssrChars, mlChars];
+  const hardPityMLPool = [mlChars];
 
   const totalWeight = weights.reduce((a, b) => a + b, 0);
   const rand = Math.random() * totalWeight;
@@ -70,9 +73,18 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
       break;
     }
   }
-
-  const selectedPool = pools[folderIndex];
-  const character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
+  if (pityCount != 80) {
+    const selectedPool = pools[folderIndex];
+    character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
+  }
+  else if (pityCount === 80 && banner === 'ml') {
+    const selectedPool = hardPityMLPool[0];
+    character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
+  }
+  else {
+    const selectedPool = hardPityPermaPool[1];
+    character = selectedPool[Math.floor(Math.random() * selectedPool.length)];
+  }
 
   let pityType: PityType = 'no pity';
   if (pityCount >= 80) {
