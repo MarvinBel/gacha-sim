@@ -22,7 +22,10 @@ const MySummons: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
+      <div style={{ display: 'flex', gap: "20%"}}>
       <h1>Mes Summons</h1>
+      <h1>Total summon : {window.localStorage.getItem("summonCount")}</h1>
+      </div>
       <div style={{ marginBottom: 20, display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <button
           onClick={() => setShowSSRAndMLOnly(!showSSRAndMLOnly)}

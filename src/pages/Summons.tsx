@@ -99,7 +99,7 @@ const Summons: React.FC = () => {
         {selectedType ? (
           <>
             <h2>{selectedType} Summon</h2>
-
+            <p>Compteur de summon total : {window.localStorage.getItem("summonCount")}</p>
             <p style={{ marginBottom: '1rem', fontWeight: 'bold', fontSize: '1.1rem' }}>
               Compteur de pity actuel : {pityCounter}
             </p>

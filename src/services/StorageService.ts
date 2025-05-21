@@ -48,4 +48,5 @@ export async function loadAllSummons(): Promise<Summon[]> {
 
 export function clearSummons() {
   localStorage.removeItem('summons');
+  localStorage.setItem("summonCount", "0");
 }

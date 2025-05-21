@@ -4,6 +4,7 @@ import Router from './router';
 import Navbar from './components/Navbar';
 
 const App: React.FC = () => {
+  localStorage.setItem("summonCount", "0");
   return (
     <BrowserRouter>
       <Navbar />

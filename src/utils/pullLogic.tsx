@@ -110,6 +110,7 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
     pityType,
     timestamp: Date.now(),
   };
+  window.localStorage.setItem('summonCount', window.localStorage.getItem('summonCount') ? (parseInt(window.localStorage.getItem('summonCount')!) + 1).toString() : '1');
   return { pull, newPity };
 }
 
