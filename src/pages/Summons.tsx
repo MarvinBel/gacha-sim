@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { performSinglePull, performMultiPull, perform85Pull, performCustomPull } from '../utils/pullLogic';
 import { saveSummon, getSummons, clearSummons } from '../services/StorageService';
 import { Summon } from '../types/types';
@@ -9,6 +9,8 @@ const Summons: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string | null>("Perma");
   const [custom, setCustom] = useState<number>(300);
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
+  const [showSROnly, setShowSROnly] = useState(false);
+
 
 
   // Convertit la sélection en banner valide pour le pull
@@ -18,7 +20,19 @@ const Summons: React.FC = () => {
 
   const displayedSummons = showSSRAndMLOnly
     ? currentPulls.filter(s => s.character.folder === 'ssr' || s.character.folder === 'ml')
+    : showSROnly
+    ? currentPulls.filter(s => s.character.folder === 'sr')
     : currentPulls;
+
+    useEffect(() => {
+      if (showSSRAndMLOnly && showSROnly)
+        setShowSROnly(!showSROnly);
+    }, [showSSRAndMLOnly]);
+
+    useEffect(() => {
+      if (showSSRAndMLOnly && showSROnly)
+        setShowSSRAndMLOnly(!showSSRAndMLOnly);
+    }, [showSROnly]);
 
   const handlePullX1 = () => {
     const { pull, newPity } = performSinglePull(pityCounter, banner);
@@ -71,8 +85,10 @@ const Summons: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <aside style={{ width: '5%', padding: '1rem',         backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
-        color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000', }}>
+      <aside style={{
+        width: '5%', padding: '1rem', backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
+        color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
+      }}>
         {['Limited', 'Perma', 'ML'].map(type => (
           <button
             key={type}
@@ -85,8 +101,8 @@ const Summons: React.FC = () => {
               fontSize: '1rem',
               borderRadius: 6,
               border: selectedType === type ? '2px solid #007bff' : '1px solid #ccc',
-                      backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
-        color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
+              backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
+              color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
               cursor: 'pointer',
             }}
           >
@@ -150,13 +166,26 @@ const Summons: React.FC = () => {
               style={{
                 padding: '0.5rem 1rem',
                 borderRadius: 6,
-                border: 'none',
                 cursor: 'pointer',
-                backgroundColor: showSSRAndMLOnly ? '#007bff' : '#ccc',
-                color: 'white',
+                backgroundColor: showSSRAndMLOnly ? '#007bff' : window.localStorage.getItem('theme') === 'dark' ? "black" : '#ddd',
+                border: window.localStorage.getItem('theme') === 'dark' ? "2px solid #ddd" : "none",
+                color: window.localStorage.getItem('theme') === 'dark' ? "#ddd" : 'black',
               }}
             >
               {showSSRAndMLOnly ? 'Afficher tous les summons' : 'Afficher seulement SSR & ML'}
+            </button>
+            <button
+              onClick={() => setShowSROnly(!showSROnly)}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: 6,
+                cursor: 'pointer',
+                backgroundColor: showSROnly ? '#007bff' : window.localStorage.getItem('theme') === 'dark' ? "black" : '#ddd',
+                border: window.localStorage.getItem('theme') === 'dark' ? "2px solid #ddd" : "none",
+                color: window.localStorage.getItem('theme') === 'dark' ? "#ddd" : 'black',
+              }}
+            >
+              {showSROnly ? 'Afficher tous les summons' : 'Afficher seulement SR'}
             </button>
             {displayedSummons.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', overflowY: 'auto' }}>
@@ -175,6 +204,7 @@ const Summons: React.FC = () => {
                         textAlign: 'center',
                         border: `2px solid ${showPityLabel ? pityColor : '#ddd'}`,
                         backgroundColor: (pull.character.folder === "ssr") || (pull.character.folder === "ml") ? "yellow" : (pull.character.folder === "sr") ? "violet" : 'lightblue',
+                        color:  'black',
                         borderRadius: 8,
                         padding: 8,
                         boxShadow: '1px 1px 5px rgba(0,0,0,0.1)',
