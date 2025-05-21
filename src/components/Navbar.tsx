@@ -19,6 +19,7 @@ const Navbar: React.FC = () => {
         { label: 'Personnages', path: '/characters' },
         { label: 'Summon', path: '/summons' },
         { label: 'Mes pulls', path: '/mysummons' },
+        { label: 'TierMaker', path: '/tierMaker' },
       ].map(({ label, path }) => (
         <NavLink
           key={path}
