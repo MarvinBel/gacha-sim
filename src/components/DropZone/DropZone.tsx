@@ -167,11 +167,11 @@ const DragDropJSON: React.FC = () => {
     console.log("type => ", type)
     switch (type) {
       case TypePersoFilter.R:
-        return "blue";
+        return "lightblue";
       case TypePersoFilter.SR:
-        return "purple";
+        return "violet";
       case TypePersoFilter.SSR_RGB:
-        return "orange"
+        return "yellow"
       default:
         return "dark"
     }
