@@ -7,14 +7,14 @@ type PityType = 'no pity' | 'soft pity' | 'hard pity';
 interface PullResult {
   pull: Summon;
   newPity: number;
+  newSrPity: number;
 }
 
 function getSoftPityBonus(pityCount: number): number {
   if (pityCount < 50 || pityCount >= 80) return 0;
   const x = pityCount - 50;
-  const maxSoftPity = 0.15;
-  const rate = (Math.log(1 + x) / Math.log(30)) * maxSoftPity;
-  return Math.min(rate, maxSoftPity);
+  const maxBonus = 0.15;
+  return Math.min((Math.log(1 + x) / Math.log(30)) * maxBonus, maxBonus);
 }
 
 function getCharactersByFolderName(name: string): Character[] {
@@ -23,122 +23,154 @@ function getCharactersByFolderName(name: string): Character[] {
   return folder.images;
 }
 
-function randomItem<T>(array: T[]): T {
-  if (!array || array.length === 0) {
-    throw new Error("Attempted to pick random item from empty or undefined array");
-  }
-  return array[Math.floor(Math.random() * array.length)];
+function randomItem<T>(arr: T[]): T {
+  if (!arr.length) throw new Error('Empty array in randomItem');
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function performSinglePull(pityCount: number, banner: Banner): PullResult {
-  let character: Character;
+function weightedRandom<T>(items: T[], weights: number[]): T {
+  const total = weights.reduce((a, b) => a + b, 0);
+  const r = Math.random() * total;
+  let acc = 0;
+  for (let i = 0; i < items.length; i++) {
+    acc += weights[i];
+    if (r < acc) return items[i];
+  }
+  return items[items.length - 1];
+}
+
+export function performSinglePull(pityCount: number, banner: Banner, srPityCount: number): PullResult {
+  const ssr = getCharactersByFolderName('ssr');
+  const ml = getCharactersByFolderName('ml');
+  const sr = getCharactersByFolderName('sr');
+  const r = getCharactersByFolderName('r');
+
+  const freya = ssr.find(c => c.title === 'Freya');
+  if (!freya) throw new Error('Freya not found');
+
+  const rareSRs = sr.slice(0, 6);
+  const commonSRs = sr.slice(6);
+
+  let character: Character | undefined;
   let pityType: PityType = 'no pity';
 
-  const ssrChars = getCharactersByFolderName('ssr');
-  const mlChars = getCharactersByFolderName('ml');
-  const srChars = getCharactersByFolderName('sr');
-  const rChars = getCharactersByFolderName('r');
-
-  const freya = ssrChars.find(c => c.title === 'Freya');
-  if (!freya) throw new Error('Freya not found in SSR characters');
-
   if (banner === 'limited') {
-    const baseFreya = 0.01;
-    const srRate = 0.15;
-
-    const bonusFreya = getSoftPityBonus(pityCount);
-    const finalFreya = baseFreya + bonusFreya;
-
-    const rRate = 1 - finalFreya - srRate;
+    const baseSSR = 0.01;
+    const softPityBonus = getSoftPityBonus(pityCount);
+    const finalSSR = baseSSR + softPityBonus;
+    const srRate = 0.09;
+    const rRate = 1 - finalSSR - srRate;
 
     if (pityCount >= 80) {
       character = freya;
       pityType = 'hard pity';
       pityCount = 0;
+      srPityCount++;
     } else {
       const rand = Math.random();
-      if (rand < finalFreya) {
+      if (rand < finalSSR) {
         character = freya;
         pityType = pityCount >= 50 ? 'soft pity' : 'no pity';
         pityCount = 0;
-      } else if (rand < finalFreya + srRate) {
-        character = randomItem(srChars);
+        srPityCount++;
+      } else if (srPityCount >= 9) {
+        character = weightedRandom(sr, sr.map((_, i) => i < 6 ? 0.0225 : 0.0675));
         pityCount++;
-      } else {
-        character = randomItem(rChars);
+        srPityCount = 0;
+      } else if (rand < finalSSR + srRate) {
+        character = weightedRandom(sr, sr.map((_, i) => i < 6 ? 0.0225 : 0.0675));
         pityCount++;
-      }
-    }
-  } else {
-    // perma / ml logic
-    let baseSSR = 0.0075;
-    let baseML = 0.0025;
-    const baseSR = 0.15;
-    const baseR = 1 - (baseSSR + baseML + baseSR);
-
-    if (banner === 'ml') {
-      baseSSR = 0;
-      baseML = 0.01;
-    }
-
-    const softPityBonus = getSoftPityBonus(pityCount);
-    const totalBase = baseSSR + baseML;
-
-    let softSSR = 0;
-    let softML = 0;
-
-    if (totalBase > 0) {
-      softSSR = softPityBonus * (baseSSR / totalBase);
-      softML = softPityBonus * (baseML / totalBase);
-    } else {
-      softML = softPityBonus;
-    }
-
-    const finalSSR = baseSSR + softSSR;
-    const finalML = baseML + softML;
-
-    const weights = [finalSSR, finalML, baseSR, baseR];
-    const pools = [ssrChars, mlChars, srChars, rChars];
-
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    const rand = Math.random() * totalWeight;
-
-    let cumWeight = 0;
-    let folderIndex = 3;
-
-    for (let i = 0; i < weights.length; i++) {
-      cumWeight += weights[i];
-      if (rand < cumWeight) {
-        folderIndex = i;
-        break;
-      }
-    }
-
-    if (banner === 'ml' && pityCount >= 80) {
-      character = randomItem(mlChars);
-      pityType = 'hard pity';
-      pityCount = 0;
-    } else if (banner === 'perma' && pityCount >= 80) {
-      const hardPityPool = ssrChars.concat(mlChars);
-      character = randomItem(hardPityPool);
-      pityType = 'hard pity';
-      pityCount = 0;
-    } else {
-      character = randomItem(pools[folderIndex]);
-
-      if (pityCount >= 50 && (folderIndex === 0 || folderIndex === 1)) {
-        pityType = 'soft pity';
-        pityCount = 0;
-      } else if (folderIndex === 0 || folderIndex === 1) {
-        pityCount = 0;
+        srPityCount = 0;
       } else {
-        pityCount += 1;
+        character = randomItem(r);
+        pityCount++;
+        srPityCount++;
       }
     }
   }
 
+  else if (banner === 'ml') {
+    const baseML = 0.01;
+    const baseSR = 0.09;
+    const baseR = 1 - baseML - baseSR;
+
+    if (pityCount >= 80) {
+      character = randomItem(ml);
+      pityType = 'hard pity';
+      pityCount = 0;
+      srPityCount++;
+    } else {
+      const rand = Math.random();
+      if (rand < baseML) {
+        character = randomItem(ml);
+        pityType = pityCount >= 50 ? 'soft pity' : 'no pity';
+        pityCount = 0;
+        srPityCount++;
+      } else if (srPityCount >= 9 || rand < baseML + baseSR) {
+        // SR LD uniquement (6 premiers SR)
+        character = randomItem(rareSRs);
+        pityCount++;
+        srPityCount = 0;
+      } else {
+        character = randomItem(r);
+        pityCount++;
+        srPityCount++;
+      }
+    }
+  }
+
+  else if (banner === 'perma') {
+    const baseSSR = 0.0075;
+    const baseML = 0.0025;
+    const baseSR = 0.09;
+    const baseR = 1 - baseSSR - baseML - baseSR;
+
+    const softPityBonus = getSoftPityBonus(pityCount);
+    const totalBase = baseSSR + baseML;
+    const bonusSSR = softPityBonus * (baseSSR / totalBase);
+    const bonusML = softPityBonus * (baseML / totalBase);
+
+    const finalSSR = baseSSR + bonusSSR;
+    const finalML = baseML + bonusML;
+    const finalSR = baseSR;
+    const finalR = baseR;
+
+    if (pityCount >= 80) {
+      character = randomItem([...ssr, ...ml]);
+      pityType = 'hard pity';
+      pityCount = 0;
+      srPityCount++;
+    } else {
+      const rand = Math.random();
+      if (rand < finalSSR) {
+        character = randomItem(ssr);
+        pityType = pityCount >= 50 ? 'soft pity' : 'no pity';
+        pityCount = 0;
+        srPityCount++;
+      } else if (rand < finalSSR + finalML) {
+        character = randomItem(ml);
+        pityType = pityCount >= 50 ? 'soft pity' : 'no pity';
+        pityCount = 0;
+        srPityCount++;
+      } else if (srPityCount >= 9 || rand < finalSSR + finalML + finalSR) {
+        character = weightedRandom(sr, sr.map((_, i) => i < 6 ? 0.0225 : 0.0675));
+        pityCount++;
+        srPityCount = 0;
+      } else {
+        character = randomItem(r);
+        pityCount++;
+        srPityCount++;
+      }
+    }
+  } else {
+    character = randomItem(r);
+    pityType = 'no pity';
+    pityCount++;
+    srPityCount++;
+  }
+
   const pull: Summon = {
-    character,
+    character: character!,
     banner,
     pityCount,
     pityType,
@@ -148,39 +180,44 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
   const count = parseInt(localStorage.getItem('summonCount') || '0', 10);
   localStorage.setItem('summonCount', (count + 1).toString());
 
-  return { pull, newPity: pityCount };
+  return { pull, newPity: pityCount, newSrPity: srPityCount };
 }
 
-
-export function performMultiPull(pityCount: number, banner: Banner): { pulls: Summon[]; newPity: number } {
+export function performMultiPull(pityCount: number, srPityCount: number, banner: Banner): { pulls: Summon[]; newPity: number; newSrPity: number } {
   const pulls: Summon[] = [];
   let newPity = pityCount;
+  let newSrPity = srPityCount;
   for (let i = 0; i < 10; i++) {
-    const { pull, newPity: updated } = performSinglePull(newPity, banner);
+    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, banner, newSrPity);
     pulls.push(pull);
-    newPity = updated;
+    newPity = updatedPity;
+    newSrPity = updatedSR;
   }
-  return { pulls, newPity };
+  return { pulls, newPity, newSrPity };
 }
 
-export function perform85Pull(pityCount: number, banner: Banner): { pulls: Summon[]; newPity: number } {
+export function perform85Pull(pityCount: number, srPityCount: number, banner: Banner): { pulls: Summon[]; newPity: number; newSrPity: number } {
   const pulls: Summon[] = [];
   let newPity = pityCount;
+  let newSrPity = srPityCount;
   for (let i = 0; i < 85; i++) {
-    const { pull, newPity: updated } = performSinglePull(newPity, banner);
+    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, banner, newSrPity);
     pulls.push(pull);
-    newPity = updated;
+    newPity = updatedPity;
+    newSrPity = updatedSR;
   }
-  return { pulls, newPity };
+  return { pulls, newPity, newSrPity };
 }
 
-export function performCustomPull(pityCount: number, banner: Banner, custom: number): { pulls: Summon[]; newPity: number } {
+export function performCustomPull(pityCount: number, srPityCount: number, banner: Banner, custom: number): { pulls: Summon[]; newPity: number; newSrPity: number } {
   const pulls: Summon[] = [];
   let newPity = pityCount;
+  let newSrPity = srPityCount;
   for (let i = 0; i < custom; i++) {
-    const { pull, newPity: updated } = performSinglePull(newPity, banner);
+    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, banner, newSrPity);
     pulls.push(pull);
-    newPity = updated;
+    newPity = updatedPity;
+    newSrPity = updatedSR;
   }
-  return { pulls, newPity };
+  return { pulls, newPity, newSrPity };
 }

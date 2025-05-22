@@ -6,10 +6,13 @@ import { Summon } from '../types/types';
 const Summons: React.FC = () => {
   const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
   const [pityCounter, setPityCounter] = useState<number>(0);
+  const [srPityCounter, setSRPityCounter] = useState<number>(0);
   const [selectedType, setSelectedType] = useState<string | null>("Perma");
   const [custom, setCustom] = useState<number>(300);
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
   const [showSROnly, setShowSROnly] = useState(false);
+  
+
 
 
   const banner = (selectedType === 'Perma' || selectedType === 'ML' || selectedType === 'Limited')
@@ -33,28 +36,28 @@ const Summons: React.FC = () => {
     }, [showSROnly]);
 
   const handlePullX1 = () => {
-    const { pull, newPity } = performSinglePull(pityCounter, banner);
+    const { pull, newPity } = performSinglePull(pityCounter, banner, srPityCounter);
     setCurrentPulls([pull]);
     setPityCounter(newPity);
     saveToLocalStorage([pull]);
   };
 
   const handlePullX10 = () => {
-    const { pulls, newPity } = performMultiPull(pityCounter, banner);
+    const { pulls, newPity } = performMultiPull(pityCounter, srPityCounter,banner);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
     saveToLocalStorage(pulls);
   };
 
   const handlePullX85 = () => {
-    const { pulls, newPity } = perform85Pull(pityCounter, banner);
+    const { pulls, newPity } = perform85Pull(pityCounter, srPityCounter, banner);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
     saveToLocalStorage(pulls);
   };
 
   const handlePullCustom = () => {
-    const { pulls, newPity } = performCustomPull(pityCounter, banner, custom);
+    const { pulls, newPity } = performCustomPull(pityCounter, srPityCounter, banner, custom);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
     saveToLocalStorage(pulls);
