@@ -46,7 +46,7 @@ export function performSinglePull(pityCount: number, banner: Banner): PullResult
     const baseFreya = 0.01;
     const srRate = 0.15;
 
-    const bonusFreya = getSoftPityBonus(pityCount); // max +15%
+    const bonusFreya = getSoftPityBonus(pityCount);
     const finalFreya = baseFreya + bonusFreya;
 
     const rRate = 1 - finalFreya - srRate;
