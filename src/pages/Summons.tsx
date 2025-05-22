@@ -12,8 +12,6 @@ const Summons: React.FC = () => {
   const [showSROnly, setShowSROnly] = useState(false);
 
 
-
-  // Convertit la sélection en banner valide pour le pull
   const banner = (selectedType === 'Perma' || selectedType === 'ML' || selectedType === 'Limited')
     ? selectedType.toLowerCase() as 'perma' | 'ml' | 'limited'
     : 'perma';
@@ -123,9 +121,9 @@ const Summons: React.FC = () => {
         {selectedType ? (
           <>
             <h2>{selectedType} Summon</h2>
-            <p>Compteur de summon total : {window.localStorage.getItem("summonCount")}</p>
+            <p>Total summon count : {window.localStorage.getItem("summonCount")}</p>
             <p style={{ marginBottom: '1rem', fontWeight: 'bold', fontSize: '1.1rem' }}>
-              Compteur de pity actuel : {pityCounter}
+              Pity counter : {pityCounter}
             </p>
 
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
@@ -158,7 +156,7 @@ const Summons: React.FC = () => {
                   flexGrow: 1,
                 }}
               >
-                Supprimer tous les summons
+                Delete all summons
               </button>
             </div>
             <button
@@ -172,7 +170,7 @@ const Summons: React.FC = () => {
                 color: window.localStorage.getItem('theme') === 'dark' ? "#ddd" : 'black',
               }}
             >
-              {showSSRAndMLOnly ? 'Afficher tous les summons' : 'Afficher seulement SSR & ML'}
+              {showSSRAndMLOnly ? 'Display all summons' : 'Display only SSR and ML'}
             </button>
             <button
               onClick={() => setShowSROnly(!showSROnly)}
@@ -185,7 +183,7 @@ const Summons: React.FC = () => {
                 color: window.localStorage.getItem('theme') === 'dark' ? "#ddd" : 'black',
               }}
             >
-              {showSROnly ? 'Afficher tous les summons' : 'Afficher seulement SR'}
+              {showSROnly ? 'Display all summons' : 'Display only SR'}
             </button>
             {displayedSummons.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', overflowY: 'auto' }}>
@@ -245,7 +243,7 @@ const Summons: React.FC = () => {
             )}
           </>
         ) : (
-          <p>Sélectionne un type de summon à gauche</p>
+          <p>Select a banner on the left</p>
         )}
       </main>
     </div>

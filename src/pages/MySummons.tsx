@@ -23,7 +23,7 @@ const MySummons: React.FC = () => {
   return (
     <div style={{ padding: 20 }}>
       <div style={{ display: 'flex', gap: "20%"}}>
-      <h1>Mes Summons</h1>
+      <h1>My Summons</h1>
       <h1>Total summon : {window.localStorage.getItem("summonCount")}</h1>
       </div>
       <div style={{ marginBottom: 20, display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -39,7 +39,7 @@ const MySummons: React.FC = () => {
             flexGrow: 1,
           }}
         >
-          {showSSRAndMLOnly ? 'Afficher tous les summons' : 'Afficher seulement SSR & ML'}
+          {showSSRAndMLOnly ? 'Display all' : 'Display only SSR and ML'}
         </button>
 
         <button
@@ -54,12 +54,12 @@ const MySummons: React.FC = () => {
             flexGrow: 1,
           }}
         >
-          Supprimer tous les summons
+          Delete all summons
         </button>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-        {displayedSummons.length === 0 && <p>Aucun summon trouvé.</p>}
+        {displayedSummons.length === 0 && <p>No summon found.</p>}
 
         {displayedSummons.map((summon, idx) => {
           let pityColor = '#000';

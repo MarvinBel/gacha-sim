@@ -57,7 +57,7 @@ const DragDropJSON: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   const displayTypeList: displayItem[] = [
-    {type: TypePersoFilter.ALL, name: "Tous"},
+    {type: TypePersoFilter.ALL, name: "All"},
     {type: TypePersoFilter.SSR, name: "SSR"},
     {type: TypePersoFilter.ML, name: "ML"},
     {type: TypePersoFilter.SSR_RGB, name: "SSR_RGB"},
@@ -93,7 +93,6 @@ const DragDropJSON: React.FC = () => {
   }
 
   const addMapItem = (key: string, item: ItemType) => {
-    // ⚠️ Ne pas modifier l'ancienne Map directement
     const newMap = new Map(droppedItems);
 
     Array.from(newMap.entries()).forEach(([mapKey, itemList]) => {
