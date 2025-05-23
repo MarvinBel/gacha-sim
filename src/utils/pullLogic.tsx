@@ -1,5 +1,6 @@
 import { folders } from './charactersData';
 import type { Summon, Character } from '../types/types';
+import { getSoftPityBonus, getCharactersByFolderName, weightedRandom, randomItem } from './pullUtils';
 
 type Banner = 'perma' | 'ml' | 'limited';
 type PityType = 'no pity' | 'soft pity' | 'hard pity';
@@ -8,35 +9,6 @@ interface PullResult {
   pull: Summon;
   newPity: number;
   newSrPity: number;
-}
-
-function getSoftPityBonus(pityCount: number): number {
-  if (pityCount < 50 || pityCount >= 80) return 0;
-  const x = pityCount - 50;
-  const maxBonus = 0.15;
-  return Math.min((Math.log(1 + x) / Math.log(30)) * maxBonus, maxBonus);
-}
-
-function getCharactersByFolderName(name: string): Character[] {
-  const folder = folders.find(f => f.name === name);
-  if (!folder) throw new Error(`Folder "${name}" not found`);
-  return folder.images;
-}
-
-function randomItem<T>(arr: T[]): T {
-  if (!arr.length) throw new Error('Empty array in randomItem');
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function weightedRandom<T>(items: T[], weights: number[]): T {
-  const total = weights.reduce((a, b) => a + b, 0);
-  const r = Math.random() * total;
-  let acc = 0;
-  for (let i = 0; i < items.length; i++) {
-    acc += weights[i];
-    if (r < acc) return items[i];
-  }
-  return items[items.length - 1];
 }
 
 export function performSinglePull(pityCount: number, banner: Banner, srPityCount: number): PullResult {
@@ -49,7 +21,6 @@ export function performSinglePull(pityCount: number, banner: Banner, srPityCount
   if (!freya) throw new Error('Freya not found');
 
   const rareSRs = sr.slice(0, 6);
-  const commonSRs = sr.slice(6);
 
   let character: Character | undefined;
   let pityType: PityType = 'no pity';
@@ -59,7 +30,6 @@ export function performSinglePull(pityCount: number, banner: Banner, srPityCount
     const softPityBonus = getSoftPityBonus(pityCount);
     const finalSSR = baseSSR + softPityBonus;
     const srRate = 0.09;
-    const rRate = 1 - finalSSR - srRate;
 
     if (pityCount >= 80) {
       character = freya;
@@ -92,7 +62,6 @@ export function performSinglePull(pityCount: number, banner: Banner, srPityCount
   else if (banner === 'ml') {
     const baseML = 0.01;
     const baseSR = 0.09;
-    const baseR = 1 - baseML - baseSR;
 
     if (pityCount >= 80) {
       character = randomItem(ml);
@@ -107,7 +76,6 @@ export function performSinglePull(pityCount: number, banner: Banner, srPityCount
         pityCount = 0;
         srPityCount++;
       } else if (srPityCount >= 9 || rand < baseML + baseSR) {
-        // SR LD uniquement (6 premiers SR)
         character = randomItem(rareSRs);
         pityCount++;
         srPityCount = 0;

@@ -53,7 +53,7 @@ const DragDropJSON: React.FC = () => {
   const [droppedItems, setDroppedItems] = useState<Map<string, ItemType[]>>(new Map());
   const [inputValue, setInputValue] = useState("");
   const [draggableItems, setDraggableItems] = useState<ItemType[]>([])
-  const [displayMode, setDisplayMode] = useState<displayItem>({type: TypePersoFilter.ALL, name: "Tous"})
+  const [displayMode, setDisplayMode] = useState<displayItem>({type: TypePersoFilter.ALL, name: "All"})
   const [open, setOpen] = useState(false);
 
   const displayTypeList: displayItem[] = [

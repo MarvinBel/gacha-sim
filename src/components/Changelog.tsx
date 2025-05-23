@@ -24,7 +24,6 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
         </Typography>
         <Divider sx={{ mb: 2, borderColor: "rgba(255,255,255,0.3)" }} />
         
-        {/* Version plus grande */}
         <Typography 
           variant="h6" 
           component="p" 
