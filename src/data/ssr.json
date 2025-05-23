@@ -16,5 +16,7 @@
   { "filename": "Rosa.jpg", "title": "Rosa", "color": "blue", "tags": ["follow up", "delay", "buff", "debuff"], "role": ["dps"] },
   { "filename": "Veronica.jpg", "title": "Veronica", "color": "red", "tags": ["debuff", "sustain", "cheat death"], "role": ["debuff"] },
   { "filename": "Tsukiyomi.jpg", "title": "Tsukiyomi", "color": "blue", "tags": ["advance", "debuff", "buff", "speed", "cooldown"], "role": ["support"] },
-  { "filename": "Hoyan.jpg", "title": "Hoyan", "color": "green", "tags": ["revive", "anti heal"], "role": ["dps"] }
+  { "filename": "Hoyan.jpg", "title": "Hoyan", "color": "green", "tags": ["revive", "anti heal"], "role": ["dps"] },
+  { "filename": "Lian.jpg", "title": "Lian", "color": "red", "tags": ["delay"], "role": ["dps"] }
+
 ]

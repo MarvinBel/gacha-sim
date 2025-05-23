@@ -44,6 +44,8 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           • Elements are now displayed in the character pages !
           {"\n"}• On hover, you can now see tags about character's capabilities.
           {"\n"}• You can now filter characters by element & rôle.
+          {"\n"}• Fixed the filter selection color which wasn't updated for elements.
+          {"\n"}• Lian is now back in the characters list.
         </Typography>
         <Typography
           variant="h6"

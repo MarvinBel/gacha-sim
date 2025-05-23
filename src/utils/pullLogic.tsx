@@ -1,4 +1,3 @@
-import { folders } from './charactersData';
 import type { Summon, Character } from '../types/types';
 import { getSoftPityBonus, getCharactersByFolderName, weightedRandom, randomItem } from './pullUtils';
 
@@ -12,7 +11,7 @@ interface PullResult {
 }
 
 export function performSinglePull(pityCount: number, banner: Banner, srPityCount: number): PullResult {
-  const ssr = getCharactersByFolderName('ssr');
+  const ssr = getCharactersByFolderName('ssr').filter(character => character.title !== 'Lian');
   const ml = getCharactersByFolderName('ml');
   const sr = getCharactersByFolderName('sr');
   const r = getCharactersByFolderName('r');

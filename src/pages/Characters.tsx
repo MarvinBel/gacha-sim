@@ -82,7 +82,7 @@ const Characters: React.FC = () => {
 
   return (
     <div style={{ padding: "1rem" }}>
-      {/* Filtres par couleur */}
+      {/* Element filter */}
       <div style={{ marginBottom: "1rem", textAlign: "center" }}>
         <strong>Filtrer par élément :</strong>
         <div
@@ -100,8 +100,8 @@ const Characters: React.FC = () => {
               padding: "4px 12px",
               borderRadius: 8,
               border: "1px solid #999",
-              backgroundColor: selectedColor === null ? "#555" : "#eee",
-              color: selectedColor === null ? "white" : "black",
+              backgroundColor: selectedColor === null ? "white" : "#333",
+              color: selectedColor === null ? "black" : "white",
               cursor: "pointer",
               fontWeight: "bold",
               fontSize: "0.8rem",
@@ -117,7 +117,7 @@ const Characters: React.FC = () => {
                 border: selectedColor === color ? "2px solid #333" : "1px solid #ccc",
                 borderRadius: "50%",
                 padding: 4,
-                backgroundColor: "white",
+                backgroundColor: selectedColor === color ? "white": "#333",
                 cursor: "pointer",
               }}
             >
@@ -136,7 +136,7 @@ const Characters: React.FC = () => {
         </div>
       </div>
 
-      {/* Filtres par rôle */}
+      {/* Role filter */}
       <div style={{ marginBottom: "1rem", textAlign: "center" }}>
         <strong>Filtrer par rôle :</strong>
         <div
@@ -184,7 +184,6 @@ const Characters: React.FC = () => {
         </div>
       </div>
 
-      {/* Sections de personnages */}
       {folders.map(({ name, images }) => (
         <section key={name} className="charBorders">
           <div
@@ -233,7 +232,7 @@ const Characters: React.FC = () => {
                         cursor: "default",
                       }}
                     >
-                      {/* Image personnage */}
+                      {/* Char pic */}
                       <img
                         src={`/characters/${name}/${filename}`}
                         alt={title}
@@ -245,7 +244,7 @@ const Characters: React.FC = () => {
                         }}
                       />
 
-                      {/* Élément en haut à droite */}
+                      {/* Char Elem */}
                       <img
                         src={`/element/${color}.jpg`}
                         alt={color}
@@ -261,7 +260,7 @@ const Characters: React.FC = () => {
                         }}
                       />
 
-                      {/* Nom du personnage */}
+                      {/* Char name */}
                       <p
                         style={{
                           fontSize: "0.65rem",
@@ -277,7 +276,7 @@ const Characters: React.FC = () => {
                         {title}
                       </p>
 
-                      {/* Rôles */}
+                      {/* Roles */}
                       {role.length > 0 && (
                         <div style={{ marginTop: 2 }}>
                           {role.map((r) => (
