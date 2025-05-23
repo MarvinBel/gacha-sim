@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import mlImages from '../data/ml.json';
-import ssrImages from '../data/ssr.json';
-import srImages from '../data/sr.json';
-import rImages from '../data/r.json';
+import React, { useState } from "react";
+import mlImages from "../data/ml.json";
+import ssrImages from "../data/ssr.json";
+import srImages from "../data/sr.json";
+import rImages from "../data/r.json";
+
 import "./Characters.css";
 
 const folders = [
-  { name: 'ml', images: mlImages },
-  { name: 'ssr', images: ssrImages },
-  { name: 'sr', images: srImages },
-  { name: 'r', images: rImages },
+  { name: "ml", images: mlImages },
+  { name: "ssr", images: ssrImages },
+  { name: "sr", images: srImages },
+  { name: "r", images: rImages },
 ];
 
 const IMAGE_SIZE_PX = 72;
@@ -28,23 +29,22 @@ const Characters: React.FC = () => {
       [name]: !prev[name],
     }));
   };
-
+  console.log("folders : ", folders[0].images[0].color);
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: "1rem" }}>
       {folders.map(({ name, images }) => (
-        <section
-          key={name}
-          className="charBorders"
-        >
+        <section key={name} className="charBorders">
           <div
-            className='charSectionTitleCont'
+            className="charSectionTitleCont"
             onClick={() => toggleSection(name)}
           >
             <button
-              aria-label={`${openSections[name] ? 'Fermer' : 'Ouvrir'} la section ${name}`}
-              className='charDrawerButton'
+              aria-label={`${
+                openSections[name] ? "Fermer" : "Ouvrir"
+              } la section ${name}`}
+              className="charDrawerButton"
             >
-              {openSections[name] ? '−' : '+'}
+              {openSections[name] ? "−" : "+"}
             </button>
             <h2 style={{ margin: 0 }}>{name.toUpperCase()}</h2>
           </div>
@@ -52,20 +52,21 @@ const Characters: React.FC = () => {
           {openSections[name] && (
             <div
               style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.5rem',
-                maxHeight: 'calc(100vh - 150px)',
-                overflowY: 'auto',
-                justifyContent: 'center',
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.5rem",
+                maxHeight: "calc(100vh - 150px)",
+                overflowY: "auto",
+                justifyContent: "center",
               }}
             >
-              {images.map(({ filename, title }) => (
+              {images.map(({ filename, title, color }) => (
                 <div
                   key={filename}
                   style={{
                     width: IMAGE_SIZE_PX,
-                    textAlign: 'center',
+                    textAlign: "center",
+                    position: "relative",
                   }}
                 >
                   <img
@@ -75,16 +76,32 @@ const Characters: React.FC = () => {
                       width: IMAGE_SIZE_PX,
                       height: IMAGE_SIZE_PX,
                       borderRadius: 8,
-                      objectFit: 'contain',
+                      objectFit: "contain",
                     }}
                   />
+
+                  <img
+                    src={`/element/${color}.jpg`}
+                    alt={color}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      width: 20,
+                      height: 20,
+                      borderRadius: "50%",
+                      backgroundColor: "white",
+                      padding: 1,
+                    }}
+                  />
+
                   <p
                     style={{
-                      fontSize: '0.65rem',
+                      fontSize: "0.65rem",
                       marginTop: 4,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
                     title={title}
                   >

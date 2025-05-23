@@ -19,28 +19,47 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h5" component="h2" gutterBottom>
+        <Typography
+          id="modal-modal-title"
+          variant="h5"
+          component="h2"
+          gutterBottom
+        >
           📝 Changelog
         </Typography>
         <Divider sx={{ mb: 2, borderColor: "rgba(255,255,255,0.3)" }} />
-        
-        <Typography 
-          variant="h6" 
-          component="p" 
+
+        <Typography
+          variant="h6"
+          component="p"
+          sx={{ fontWeight: "bold", mb: 1 }}
+        >
+          Version 0.0.2 - Elements display:
+        </Typography>
+
+        <Typography
+          id="modal-modal-description"
+          sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
+        >
+          • Elements are now displayed in the character pages !
+        </Typography>
+        <Typography
+          variant="h6"
+          component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
           Version 0.0.1 - Testing stuff:
         </Typography>
-        
-        <Typography 
-          id="modal-modal-description" 
+
+        <Typography
+          id="modal-modal-description"
           sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
         >
           • Added a changelog modal, yay!
-          {"\n"}• The SR rates are now good: 9% overall, 2.25% for LD SRs & 6.75% for normal SRs.
+          {"\n"}• The SR rates are now good: 9% overall, 2.25% for LD SRs &
+          6.75% for normal SRs.
           {"\n"}• LD banner only spawns LD SRs too.
         </Typography>
-        
         <Box sx={{ textAlign: "right", mt: 3 }}>
           <Button variant="contained" color="primary" onClick={handleClose}>
             Close
