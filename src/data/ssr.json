@@ -12,7 +12,7 @@
   { "filename": "Rahu.jpg", "title": "Rahu", "color": "green", "tags": ["debuff", "buff", "cleanse", "follow up", "windup"], "role": ["dps"] },
   { "filename": "Lingluo.jpg", "title": "Lingluo", "color": "blue", "tags": ["cleanse", "buff"], "role": ["support"] },
   { "filename": "Rilmocha.jpg", "title": "Rilmocha", "color": "green", "tags": ["delay", "cc"], "role": ["dps"] },
-  { "filename": "Tiamat.jpg", "title": "Tiamat", "color": "blue", "tags": ["sustain", "taunt", "windup"], "role": ["dps"] },
+  { "filename": "Tiamat.jpg", "title": "Tiamat", "color": "blue", "tags": ["sustain", "taunt", "windup"], "role": ["dps", "sustain"] },
   { "filename": "Rosa.jpg", "title": "Rosa", "color": "blue", "tags": ["follow up", "delay", "buff", "debuff"], "role": ["dps"] },
   { "filename": "Veronica.jpg", "title": "Veronica", "color": "red", "tags": ["debuff", "sustain", "cheat death"], "role": ["debuff"] },
   { "filename": "Tsukiyomi.jpg", "title": "Tsukiyomi", "color": "blue", "tags": ["advance", "debuff", "buff", "speed", "cooldown"], "role": ["support"] },

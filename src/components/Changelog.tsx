@@ -42,7 +42,8 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
         >
           • Elements are now displayed in the character pages !
-          {"\n"}• On hover, you can now see tags about character's capabilities .
+          {"\n"}• On hover, you can now see tags about character's capabilities.
+          {"\n"}• You can now filter characters by element & rôle.
         </Typography>
         <Typography
           variant="h6"

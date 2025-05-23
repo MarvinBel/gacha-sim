@@ -25,15 +25,25 @@ const roleColors: Record<string, string> = {
   sustain: "#66bb6a",
 };
 
+const elementColors = ["red", "green", "blue", "yellow", "violet"];
+
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: window.localStorage.getItem("theme") === "dark" ? theme.palette.common.white : theme.palette.common.black,
+    color:
+      window.localStorage.getItem("theme") === "dark"
+        ? theme.palette.common.white
+        : theme.palette.common.black,
   },
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: window.localStorage.getItem("theme") === "dark" ? theme.palette.common.white : theme.palette.common.black,
-    color: window.localStorage.getItem("theme") === "dark"? "black" : "white",
+    backgroundColor:
+      window.localStorage.getItem("theme") === "dark"
+        ? theme.palette.common.white
+        : theme.palette.common.black,
+    color: window.localStorage.getItem("theme") === "dark"
+      ? "black"
+      : "white",
     fontSize: 11,
     padding: "6px 10px",
     borderRadius: 6,
@@ -41,7 +51,11 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
+const roleKeys = Object.keys(roleColors);
+
 const Characters: React.FC = () => {
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     ml: true,
     ssr: true,
@@ -58,8 +72,119 @@ const Characters: React.FC = () => {
 
   const isDark = window.localStorage.getItem("theme") === "dark";
 
+  const handleFilterColor = (color: string | null) => {
+    setSelectedColor(color);
+  };
+
+  const handleFilterRole = (role: string | null) => {
+    setSelectedRole(role);
+  };
+
   return (
     <div style={{ padding: "1rem" }}>
+      {/* Filtres par couleur */}
+      <div style={{ marginBottom: "1rem", textAlign: "center" }}>
+        <strong>Filtrer par élément :</strong>
+        <div
+          style={{
+            marginTop: 8,
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
+          <button
+            onClick={() => handleFilterColor(null)}
+            style={{
+              padding: "4px 12px",
+              borderRadius: 8,
+              border: "1px solid #999",
+              backgroundColor: selectedColor === null ? "#555" : "#eee",
+              color: selectedColor === null ? "white" : "black",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "0.8rem",
+            }}
+          >
+            Tous
+          </button>
+          {elementColors.map((color) => (
+            <button
+              key={color}
+              onClick={() => handleFilterColor(color)}
+              style={{
+                border: selectedColor === color ? "2px solid #333" : "1px solid #ccc",
+                borderRadius: "50%",
+                padding: 4,
+                backgroundColor: "white",
+                cursor: "pointer",
+              }}
+            >
+              <img
+                src={`/element/${color}.jpg`}
+                alt={color}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  backgroundColor: "#fff",
+                }}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Filtres par rôle */}
+      <div style={{ marginBottom: "1rem", textAlign: "center" }}>
+        <strong>Filtrer par rôle :</strong>
+        <div
+          style={{
+            marginTop: 8,
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
+          <button
+            onClick={() => handleFilterRole(null)}
+            style={{
+              padding: "4px 12px",
+              borderRadius: 8,
+              border: "1px solid #999",
+              backgroundColor: selectedRole === null ? "#555" : "#eee",
+              color: selectedRole === null ? "white" : "black",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "0.8rem",
+            }}
+          >
+            Tous
+          </button>
+          {roleKeys.map((role) => (
+            <button
+              key={role}
+              onClick={() => handleFilterRole(role)}
+              style={{
+                border: selectedRole === role ? `2px solid ${roleColors[role]}` : "1px solid #ccc",
+                borderRadius: 8,
+                padding: "4px 10px",
+                backgroundColor: selectedRole === role ? roleColors[role] : "#fff",
+                color: selectedRole === role ? "#fff" : "#000",
+                cursor: "pointer",
+                fontWeight: "600",
+                textTransform: "capitalize",
+              }}
+            >
+              {role}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Sections de personnages */}
       {folders.map(({ name, images }) => (
         <section key={name} className="charBorders">
           <div
@@ -88,95 +213,98 @@ const Characters: React.FC = () => {
                 justifyContent: "center",
               }}
             >
-              {images.map(({ filename, title, color, tags = [], role = [] }) => (
-                <BootstrapTooltip
-                  key={filename}
-                  title={
-                    tags.length > 0 ? tags.join(", ") : "Aucun tag"
-                  }
-                  placement="top"
-                >
-                  <div
-                    style={{
-                      width: IMAGE_SIZE_PX,
-                      textAlign: "center",
-                      position: "relative",
-                      fontSize: "0.6rem",
-                      cursor: "default",
-                    }}
+              {images
+                .filter(({ color, role }) =>
+                  (!selectedColor || color === selectedColor) &&
+                  (!selectedRole || (role && role.includes(selectedRole)))
+                )
+                .map(({ filename, title, color, tags = [], role = [] }) => (
+                  <BootstrapTooltip
+                    key={filename}
+                    title={tags.length > 0 ? tags.join(", ") : "Aucun tag"}
+                    placement="top"
                   >
-                    {/* Image personnage */}
-                    <img
-                      src={`/characters/${name}/${filename}`}
-                      alt={title}
+                    <div
                       style={{
                         width: IMAGE_SIZE_PX,
-                        height: IMAGE_SIZE_PX,
-                        borderRadius: 8,
-                        objectFit: "contain",
+                        textAlign: "center",
+                        position: "relative",
+                        fontSize: "0.6rem",
+                        cursor: "default",
                       }}
-                    />
-
-                    {/* Élément en haut à droite */}
-                    <img
-                      src={`/element/${color}.jpg`}
-                      alt={color}
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        backgroundColor: isDark ? "#222" : "white",
-                        padding: 1,
-                      }}
-                    />
-
-                    {/* Nom du personnage */}
-                    <p
-                      style={{
-                        fontSize: "0.65rem",
-                        margin: "2px 0 0 0",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        fontWeight: 600,
-                        color: isDark ? "#eee" : "#222",
-                      }}
-                      title={title}
                     >
-                      {title}
-                    </p>
+                      {/* Image personnage */}
+                      <img
+                        src={`/characters/${name}/${filename}`}
+                        alt={title}
+                        style={{
+                          width: IMAGE_SIZE_PX,
+                          height: IMAGE_SIZE_PX,
+                          borderRadius: 8,
+                          objectFit: "contain",
+                        }}
+                      />
 
-                    {/* Rôles */}
-                    {role.length > 0 && (
-                      <div style={{ marginTop: 2 }}>
-                        {role.map((r) => (
-                          <span
-                            key={r}
-                            style={{
-                              display: "inline-block",
-                              backgroundColor:
-                                roleColors[r] || (isDark ? "#444" : "#ccc"),
-                              color: isDark ? "#fff" : "#000",
-                              padding: "2px 6px",
-                              borderRadius: "999px",
-                              fontSize: "0.55rem",
-                              fontWeight: 600,
-                              boxShadow: "0 0 2px rgba(0, 0, 0, 0.3)",
-                              marginTop: 2,
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {r}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </BootstrapTooltip>
-              ))}
+                      {/* Élément en haut à droite */}
+                      <img
+                        src={`/element/${color}.jpg`}
+                        alt={color}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          backgroundColor: isDark ? "#222" : "white",
+                          padding: 1,
+                        }}
+                      />
+
+                      {/* Nom du personnage */}
+                      <p
+                        style={{
+                          fontSize: "0.65rem",
+                          margin: "2px 0 0 0",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          fontWeight: 600,
+                          color: isDark ? "#eee" : "#222",
+                        }}
+                        title={title}
+                      >
+                        {title}
+                      </p>
+
+                      {/* Rôles */}
+                      {role.length > 0 && (
+                        <div style={{ marginTop: 2 }}>
+                          {role.map((r) => (
+                            <span
+                              key={r}
+                              style={{
+                                display: "inline-block",
+                                backgroundColor:
+                                  roleColors[r] || (isDark ? "#444" : "#ccc"),
+                                color: isDark ? "#fff" : "#000",
+                                padding: "2px 6px",
+                                borderRadius: "999px",
+                                fontSize: "0.55rem",
+                                fontWeight: 600,
+                                boxShadow: "0 0 2px rgba(0, 0, 0, 0.3)",
+                                marginTop: 2,
+                                textTransform: "capitalize",
+                              }}
+                            >
+                              {r}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </BootstrapTooltip>
+                ))}
             </div>
           )}
         </section>
