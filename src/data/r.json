@@ -1,7 +1,7 @@
 [
-  { "filename": "Andrew-blue.jpg", "title": "Andrew-blue", "color": "blue", "tags": ["debuff"], "role": ["dps"] },
+  { "filename": "Andrew-blue.jpg", "title": "Andrew blue", "color": "blue", "tags": ["debuff"], "role": ["dps"] },
   { "filename": "No41.jpg", "title": "No41", "color": "yellow", "tags": ["debuff", "sustain", "advance"], "role": ["support"] },
-  { "filename": "Andrew-red.jpg", "title": "Andrew-red", "color": "yellow", "tags": ["taunt", "debuff", "windup"], "role": ["dps"] },
+  { "filename": "Andrew-red.jpg", "title": "Andrew red", "color": "yellow", "tags": ["taunt", "debuff", "windup"], "role": ["dps"] },
   { "filename": "Sybil.jpg", "title": "Sybil", "color": "blue", "tags": ["debuff"], "role": ["dps"] },
   { "filename": "Asshu.jpg", "title": "Asshu", "color": "green", "tags": ["dot", "debuff"], "role": ["debuff"] },
   { "filename": "Vice.jpg", "title": "Vice", "color": "yellow", "tags": ["taunt", "debuff"], "role": ["sustain"] },

@@ -1,7 +1,7 @@
 [
   { "filename": "Marvell.jpg", "title": "Marvell", "color": "yellow", "tags": ["delay", "debuff"], "role": ["debuff"] },
   { "filename": "Valerian.jpg", "title": "Valerian", "color": "yellow", "tags": ["cc", "buff", "cheat death"], "role": ["support"] },
-  { "filename": "Cachi-guard.jpg", "title": "Cachi-guard", "color": "violet", "tags": ["delay", "debuff", "buff"], "role": ["debuff"] },
+  { "filename": "Cachi-guard.jpg", "title": "Cachi guard", "color": "violet", "tags": ["delay", "debuff", "buff"], "role": ["debuff"] },
   { "filename": "Dorothy.jpg", "title": "Dorothy", "color": "yellow", "tags": ["cleanse", "buff"], "role": ["support"] },
   { "filename": "Victor.jpg", "title": "Victor", "color": "violet", "tags": [], "role": ["dps"] },
   { "filename": "Diting.jpg", "title": "Diting", "color": "violet", "tags": ["debuff", "follow up"], "role": ["dps"] },
@@ -15,13 +15,13 @@
   { "filename": "Kraken.jpg", "title": "Kraken", "color": "blue", "tags": ["debuff", "cc", "delay"], "role": ["debuff"] },
   { "filename": "Tsutomu.jpg", "title": "Tsutomu", "color": "green", "tags": ["dispel"], "role": ["dps"] },
   { "filename": "Obol.jpg", "title": "Obol", "color": "blue", "tags": ["dot", "cc", "dispel"], "role": ["debuff"] },
-  { "filename": "Rin-unbowed.jpg", "title": "Rin-unbowed", "color": "blue", "tags": ["delay"], "role": ["dps"] },
+  { "filename": "Rin-unbowed.jpg", "title": "Rin unbowed", "color": "blue", "tags": ["delay"], "role": ["dps"] },
   { "filename": "Chiaki.jpg", "title": "Chiaki", "color": "red", "tags": ["buff"], "role": ["sustain"] },
   { "filename": "Rin.jpg", "title": "Rin", "color": "red", "tags": ["debuff", "buff", "taunt"], "role": ["sustain"] },
-  { "filename": "Chiaki_echo.jpg", "title": "Chiaki_echo", "color": "green", "tags": ["buff", "cleanse", "advance"], "role": ["support"] },
+  { "filename": "Chiaki_echo.jpg", "title": "Chiaki echo", "color": "green", "tags": ["buff", "cleanse", "advance"], "role": ["support"] },
   { "filename": "Turandot.jpg", "title": "Turandot", "color": "red", "tags": ["delay", "dispel", "buff"], "role": ["support"] },
   { "filename": "Dinah.jpg", "title": "Dinah", "color": "red", "tags": ["debuff", "delay", "advance"], "role": ["debuff"] },
   { "filename": "Viper.jpg", "title": "Viper", "color": "blue", "tags": ["debuff", "counter", "buff", "dispel", "delay"], "role": ["debuff"] },
-  { "filename": "Dorothy-wisher.jpg", "title": "Dorothy-wisher", "color": "red", "tags": ["advance", "buff", "sustain", "delay", "cooldown"], "role": ["support"] },
+  { "filename": "Dorothy-wisher.jpg", "title": "Dorothy wisher", "color": "red", "tags": ["advance", "buff", "sustain", "delay", "cooldown"], "role": ["support"] },
   { "filename": "Yang.jpg", "title": "Yang", "color": "blue", "tags": ["advance", "buff", "dispel"], "role": ["support"] }
 ]

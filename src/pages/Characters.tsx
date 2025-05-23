@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { styled } from "@mui/material/styles";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+
 import mlImages from "../data/ml.json";
 import ssrImages from "../data/ssr.json";
 import srImages from "../data/sr.json";
@@ -15,6 +18,29 @@ const folders = [
 
 const IMAGE_SIZE_PX = 72;
 
+const roleColors: Record<string, string> = {
+  support: "#4fc3f7",
+  dps: "#ef5350",
+  debuff: "#ab47bc",
+  sustain: "#66bb6a",
+};
+
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: window.localStorage.getItem("theme") === "dark" ? theme.palette.common.white : theme.palette.common.black,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: window.localStorage.getItem("theme") === "dark" ? theme.palette.common.white : theme.palette.common.black,
+    color: window.localStorage.getItem("theme") === "dark"? "black" : "white",
+    fontSize: 11,
+    padding: "6px 10px",
+    borderRadius: 6,
+    maxWidth: 220,
+  },
+}));
+
 const Characters: React.FC = () => {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     ml: true,
@@ -29,7 +55,9 @@ const Characters: React.FC = () => {
       [name]: !prev[name],
     }));
   };
-  console.log("folders : ", folders[0].images[0].color);
+
+  const isDark = window.localStorage.getItem("theme") === "dark";
+
   return (
     <div style={{ padding: "1rem" }}>
       {folders.map(({ name, images }) => (
@@ -60,54 +88,94 @@ const Characters: React.FC = () => {
                 justifyContent: "center",
               }}
             >
-              {images.map(({ filename, title, color }) => (
-                <div
+              {images.map(({ filename, title, color, tags = [], role = [] }) => (
+                <BootstrapTooltip
                   key={filename}
-                  style={{
-                    width: IMAGE_SIZE_PX,
-                    textAlign: "center",
-                    position: "relative",
-                  }}
+                  title={
+                    tags.length > 0 ? tags.join(", ") : "Aucun tag"
+                  }
+                  placement="top"
                 >
-                  <img
-                    src={`/characters/${name}/${filename}`}
-                    alt={title}
+                  <div
                     style={{
                       width: IMAGE_SIZE_PX,
-                      height: IMAGE_SIZE_PX,
-                      borderRadius: 8,
-                      objectFit: "contain",
+                      textAlign: "center",
+                      position: "relative",
+                      fontSize: "0.6rem",
+                      cursor: "default",
                     }}
-                  />
-
-                  <img
-                    src={`/element/${color}.jpg`}
-                    alt={color}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                      width: 20,
-                      height: 20,
-                      borderRadius: "50%",
-                      backgroundColor: "white",
-                      padding: 1,
-                    }}
-                  />
-
-                  <p
-                    style={{
-                      fontSize: "0.65rem",
-                      marginTop: 4,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                    title={title}
                   >
-                    {title}
-                  </p>
-                </div>
+                    {/* Image personnage */}
+                    <img
+                      src={`/characters/${name}/${filename}`}
+                      alt={title}
+                      style={{
+                        width: IMAGE_SIZE_PX,
+                        height: IMAGE_SIZE_PX,
+                        borderRadius: 8,
+                        objectFit: "contain",
+                      }}
+                    />
+
+                    {/* Élément en haut à droite */}
+                    <img
+                      src={`/element/${color}.jpg`}
+                      alt={color}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
+                        backgroundColor: isDark ? "#222" : "white",
+                        padding: 1,
+                      }}
+                    />
+
+                    {/* Nom du personnage */}
+                    <p
+                      style={{
+                        fontSize: "0.65rem",
+                        margin: "2px 0 0 0",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        fontWeight: 600,
+                        color: isDark ? "#eee" : "#222",
+                      }}
+                      title={title}
+                    >
+                      {title}
+                    </p>
+
+                    {/* Rôles */}
+                    {role.length > 0 && (
+                      <div style={{ marginTop: 2 }}>
+                        {role.map((r) => (
+                          <span
+                            key={r}
+                            style={{
+                              display: "inline-block",
+                              backgroundColor:
+                                roleColors[r] || (isDark ? "#444" : "#ccc"),
+                              color: isDark ? "#fff" : "#000",
+                              padding: "2px 6px",
+                              borderRadius: "999px",
+                              fontSize: "0.55rem",
+                              fontWeight: 600,
+                              boxShadow: "0 0 2px rgba(0, 0, 0, 0.3)",
+                              marginTop: 2,
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {r}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </BootstrapTooltip>
               ))}
             </div>
           )}
