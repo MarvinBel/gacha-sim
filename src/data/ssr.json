@@ -1,22 +1,22 @@
 [
   { "filename": "Celince.jpg", "title": "Celince", "color": "blue", "tags": ["debuff", "buff", "sustain"], "role": ["debuff"], "folder": "ssr" },
-  { "filename": "Xiada.jpg", "title": "Xiada", "color": "blue", "tags": ["buff steal", "debuff"], "role": ["dps"], "folder": "ssr" },
-  { "filename": "Helkid.jpg", "title": "Helkid", "color": "red", "tags": ["debuff", "cc"], "role": ["debuff", "sustain", "dps"], "folder": "ssr" },
+  { "filename": "Xiada.jpg", "title": "Xiada", "color": "blue", "tags": ["buff steal", "debuff", "dps"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Helkid.jpg", "title": "Helkid", "color": "red", "tags": ["debuff", "cc", "dps"], "role": ["debuff", "sustain", "dps"], "folder": "ssr" },
   { "filename": "Beyontin.jpg", "title": "Beyontin", "color": "red", "tags": ["revive", "buff", "advance", "cooldown"], "role": ["support"], "folder": "ssr" },
   { "filename": "Khloros.jpg", "title": "Khloros", "color": "red", "tags": ["debuff"], "role": ["debuff"], "folder": "ssr" },
-  { "filename": "Borgne.jpg", "title": "Borgne", "color": "blue", "tags": ["dispel"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Borgne.jpg", "title": "Borgne", "color": "blue", "tags": ["dispel", "dps"], "role": ["dps"], "folder": "ssr" },
   { "filename": "Kloss.jpg", "title": "Kloss", "color": "green", "tags": ["debuff", "delay", "advance", "windup"], "role": ["debuff"], "folder": "ssr" },
   { "filename": "Freya.jpg", "title": "Freya", "color": "green", "tags": ["debuff", "buff", "advance", "delay", "sustain"], "role": ["support"], "folder": "ssr" },
   { "filename": "Mia.jpg", "title": "Mia", "color": "red", "tags": ["dispel", "cleanse", "buff", "cooldown", "delay"], "role": ["support"], "folder": "ssr" },
   { "filename": "Lilith.jpg", "title": "Lilith", "color": "green", "tags": ["delay", "cc"], "role": ["debuff"], "folder": "ssr" },
-  { "filename": "Rahu.jpg", "title": "Rahu", "color": "green", "tags": ["debuff", "buff", "cleanse", "follow up", "windup"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Rahu.jpg", "title": "Rahu", "color": "green", "tags": ["debuff", "buff", "cleanse", "follow up", "windup", "dps"], "role": ["dps"], "folder": "ssr" },
   { "filename": "Lingluo.jpg", "title": "Lingluo", "color": "blue", "tags": ["cleanse", "buff"], "role": ["support"], "folder": "ssr" },
-  { "filename": "Rilmocha.jpg", "title": "Rilmocha", "color": "green", "tags": ["delay", "cc"], "role": ["dps"], "folder": "ssr" },
-  { "filename": "Tiamat.jpg", "title": "Tiamat", "color": "blue", "tags": ["sustain", "taunt", "windup"], "role": ["dps", "sustain"], "folder": "ssr" },
-  { "filename": "Rosa.jpg", "title": "Rosa", "color": "blue", "tags": ["follow up", "delay", "buff", "debuff"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Rilmocha.jpg", "title": "Rilmocha", "color": "green", "tags": ["delay", "cc", "dps"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Tiamat.jpg", "title": "Tiamat", "color": "blue", "tags": ["sustain", "taunt", "windup", "dps"], "role": ["dps", "sustain"], "folder": "ssr" },
+  { "filename": "Rosa.jpg", "title": "Rosa", "color": "blue", "tags": ["follow up", "delay", "buff", "debuff", "dps"], "role": ["dps"], "folder": "ssr" },
   { "filename": "Veronica.jpg", "title": "Veronica", "color": "red", "tags": ["debuff", "sustain", "cheat death"], "role": ["debuff"], "folder": "ssr" },
   { "filename": "Tsukiyomi.jpg", "title": "Tsukiyomi", "color": "blue", "tags": ["advance", "debuff", "buff", "speed", "cooldown"], "role": ["support"], "folder": "ssr" },
-  { "filename": "Hoyan.jpg", "title": "Hoyan", "color": "green", "tags": ["revive", "anti heal"], "role": ["dps"], "folder": "ssr" },
-  { "filename": "Lian.jpg", "title": "Lian", "color": "red", "tags": ["delay"], "role": ["dps"], "folder": "ssr" }
+  { "filename": "Hoyan.jpg", "title": "Hoyan", "color": "green", "tags": ["revive", "anti heal", "dps"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Lian.jpg", "title": "Lian", "color": "red", "tags": ["delay", "dps"], "role": ["dps"], "folder": "ssr" }
 
 ]
