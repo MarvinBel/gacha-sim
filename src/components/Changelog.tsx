@@ -34,7 +34,25 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
-          Version 0.0.2 - Elements display:
+          Version 0.1.0 - Team maker:
+        </Typography>
+
+        <Typography
+          id="modal-modal-description"
+          sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
+        >
+          • There is now a team maker available on the website, check it out !
+          {"\n"}• Everything is saved in your browser, so you can come back
+          later and your team will still be there.
+          {"\n"}• There will be a beautifier update !
+          {"\n"}• There will be a "My teams" page in the future, where you can
+          see your teams in one glimpse.
+        </Typography>
+        <Typography
+          variant="h6"
+          component="p"
+          sx={{ fontWeight: "bold", mb: 1 }}
+        >Version 0.0.2 - Elements display:
         </Typography>
 
         <Typography

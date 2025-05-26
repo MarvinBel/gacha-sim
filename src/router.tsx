@@ -5,6 +5,7 @@ import Characters from './pages/Characters';
 import Summons from './pages/Summons';
 import MySummons from './pages/MySummons';
 import TierMaker from './pages/TierMaker/TierMaker';
+import TeamMaker from './pages/TeamMaker';
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
       <Route path="/summons" element={<Summons />} />
       <Route path="/mysummons" element={<MySummons />} />
       <Route path="/tierMaker" element={<TierMaker />} />
+      <Route path="/teammaker" element={<TeamMaker />} />
       <Route path="*" element={<h1>404 - Page not found</h1>} />
     </Routes>
   );

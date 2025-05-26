@@ -1,7 +1,7 @@
 [
-  { "filename": "Heinrich.jpg", "title": "Heinrich", "color": "violet", "tags": ["dps", "debuff", "dispel"], "role": ["dps", "debuff"] },
-  { "filename": "Dokidoki.jpg", "title": "Dokidoki", "color": "yellow", "tags": ["buff", "speed", "cooldown", "cleanse", "advance"], "role": ["support"] },
-  { "filename": "Massiah.jpg", "title": "Massiah", "color": "yellow", "tags": ["dps", "debuff"], "role": ["dps"] },
-  { "filename": "Lily.jpg", "title": "Lily", "color": "violet", "tags": ["buff", "follow-up", "delay", "speed", "advance"], "role": ["support"] },
-  { "filename": "Sania_withered.jpg", "title": "Sania withered", "color": "violet", "tags": ["dot", "windup"], "role": ["dps"] }
+  { "filename": "Heinrich.jpg", "title": "Heinrich", "color": "violet", "tags": ["dps", "debuff", "dispel"], "role": ["dps", "debuff"], "folder": "ml" },
+  { "filename": "Dokidoki.jpg", "title": "Dokidoki", "color": "yellow", "tags": ["buff", "speed", "cooldown", "cleanse", "advance"], "role": ["support"], "folder": "ml" },
+  { "filename": "Massiah.jpg", "title": "Massiah", "color": "yellow", "tags": ["dps", "debuff"], "role": ["dps"], "folder": "ml" },
+  { "filename": "Lily.jpg", "title": "Lily", "color": "violet", "tags": ["buff", "follow-up", "delay", "speed", "advance"], "role": ["support"], "folder": "ml" },
+  { "filename": "Sania_withered.jpg", "title": "Sania withered", "color": "violet", "tags": ["dot", "windup"], "role": ["dps"], "folder": "ml" }
 ]

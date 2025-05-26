@@ -1,0 +1,6 @@
+[
+    { "filename": "Terrormaton.jpg", "goal": "stuff", "color": "green"},
+    { "filename": "Dokidoki.jpg", "goal": "stuff", "color": "yellow"},
+    { "filename": "Febian.jpg", "goal": "shell", "color": "yellow"},
+    { "filename": "Whitney.jpg", "goal": "shell", "color": "red"}
+]

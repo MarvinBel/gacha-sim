@@ -114,7 +114,7 @@ const Characters: React.FC = () => {
               key={color}
               onClick={() => handleFilterColor(color)}
               style={{
-                border: selectedColor === color ? "2px solid #333" : "1px solid #ccc",
+                border: selectedColor === color ? "px solid #333" : "1px solid #ccc",
                 borderRadius: "50%",
                 padding: 4,
                 backgroundColor: selectedColor === color ? "white": "#333",
