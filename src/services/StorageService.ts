@@ -1,44 +1,45 @@
+import Cookies from "js-cookie";
 import { Summon, PityHistory } from '../types/types';
 
 export const getSummons = (): Summon[] => {
-  const data = localStorage.getItem('summons');
+  const data = Cookies.get('summons');
   return data ? JSON.parse(data) : [];
 };
 
 export const saveSummon = (summon: Summon) => {
   const current = getSummons();
-  localStorage.setItem('summons', JSON.stringify([summon, ...current]));
+  Cookies.set('summons', JSON.stringify([summon, ...current]), { expires: 30 });
 };
 
 export const getPity = (banner: string): number => {
-  const data = localStorage.getItem(`pity-${banner}`);
+  const data = Cookies.get(`pity-${banner}`);
   return data ? parseInt(data, 10) : 0;
 };
 
 export const incrementPity = (banner: string) => {
   const current = getPity(banner);
-  localStorage.setItem(`pity-${banner}`, (current + 1).toString());
+  Cookies.set(`pity-${banner}`, (current + 1).toString(), { expires: 30 });
 };
 
 export const resetPity = (banner: string) => {
-  localStorage.setItem(`pity-${banner}`, '0');
+  Cookies.set(`pity-${banner}`, '0', { expires: 30 });
 };
 
 export const savePity = (value: number, banner: string) => {
-  const data = localStorage.getItem('pity-history');
+  const data = Cookies.get('pity-history');
   const history: PityHistory[] = data ? JSON.parse(data) : [];
   history.unshift({ banner, pulls: value, date: new Date().toISOString() });
-  localStorage.setItem('pity-history', JSON.stringify(history));
+  Cookies.set('pity-history', JSON.stringify(history), { expires: 30 });
 };
 
 export const getPityHistory = (): PityHistory[] => {
-  const data = localStorage.getItem('pity-history');
+  const data = Cookies.get('pity-history');
   return data ? JSON.parse(data) : [];
 };
 
 export async function loadAllSummons(): Promise<Summon[]> {
   try {
-    const data = localStorage.getItem('summons');
+    const data = Cookies.get('summons');
     return data ? JSON.parse(data) : [];
   } catch (error) {
     console.error('Erreur lors du chargement des summons :', error);
@@ -47,6 +48,26 @@ export async function loadAllSummons(): Promise<Summon[]> {
 }
 
 export function clearSummons() {
-  localStorage.removeItem('summons');
-  localStorage.setItem("summonCount", "0");
+  Cookies.remove('summons');
+  Cookies.set("summonCount", "0", { expires: 30 });
 }
+
+const SUMMON_COUNT_KEY = "summonCount";
+
+export const getSummonCount = (): number => {
+  const value = Cookies.get(SUMMON_COUNT_KEY);
+  return value ? parseInt(value, 10) : 0;
+};
+
+export const setSummonCount = (count: number) => {
+  Cookies.set(SUMMON_COUNT_KEY, count.toString(), { expires: 30 });
+};
+
+export const incrementSummonCount = (by: number = 1) => {
+  const current = getSummonCount();
+  setSummonCount(current + by);
+};
+
+export const resetSummonCount = () => {
+  setSummonCount(0);
+};

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { performSinglePull, performMultiPull, perform85Pull, performCustomPull } from '../utils/pullLogic';
-import { saveSummon, getSummons, clearSummons } from '../services/StorageService';
+import { saveSummon, getSummons, clearSummons, getSummonCount, setSummonCount, incrementSummonCount, resetSummonCount } from '../services/StorageService';
 import { Summon } from '../types/types';
+import Cookies from 'js-cookie';
+
 
 const Summons: React.FC = () => {
   const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
@@ -39,33 +41,34 @@ const Summons: React.FC = () => {
     const { pull, newPity } = performSinglePull(pityCounter, banner, srPityCounter);
     setCurrentPulls([pull]);
     setPityCounter(newPity);
-    saveToLocalStorage([pull]);
+    saveToCookie([pull]);
   };
 
   const handlePullX10 = () => {
     const { pulls, newPity } = performMultiPull(pityCounter, srPityCounter,banner);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
-    saveToLocalStorage(pulls);
+    saveToCookie(pulls);
   };
 
   const handlePullX85 = () => {
     const { pulls, newPity } = perform85Pull(pityCounter, srPityCounter, banner);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
-    saveToLocalStorage(pulls);
+    saveToCookie(pulls);
   };
 
   const handlePullCustom = () => {
     const { pulls, newPity } = performCustomPull(pityCounter, srPityCounter, banner, custom);
     setCurrentPulls(pulls);
     setPityCounter(newPity);
-    saveToLocalStorage(pulls);
+    saveToCookie(pulls);
   };
 
-  const saveToLocalStorage = (summons: Summon[]) => {
-    summons.forEach(summon => saveSummon(summon));
-  };
+const saveToCookie = (summons: Summon[]) => {
+  summons.forEach(summon => saveSummon(summon));
+  incrementSummonCount(summons.length);
+};
 
   const handleChangeCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -81,6 +84,7 @@ const Summons: React.FC = () => {
     clearSummons();
     setCurrentPulls([]);
     setPityCounter(0);
+    resetSummonCount();
   };
 
 
@@ -124,7 +128,7 @@ const Summons: React.FC = () => {
         {selectedType ? (
           <>
             <h2>{selectedType} Summon</h2>
-            <p>Total summon count : {window.localStorage.getItem("summonCount")}</p>
+            <p>Total summon count : {getSummonCount()}</p>
             <p style={{ marginBottom: '1rem', fontWeight: 'bold', fontSize: '1.1rem' }}>
               Pity counter : {pityCounter}
             </p>
