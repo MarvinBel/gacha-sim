@@ -1,7 +1,7 @@
 // src/pages/TeamMakerPage.tsx
 import React, { useState, useEffect } from "react";
 import { TeamCharacter, TeamData, FolderName } from "../types/types";
-import { getTeamsFromStorage, saveTeamsToStorage } from "../utils/storage";
+import { getTeamsFromCookies, saveTeamsToCookies } from "../utils/storage";
 
 import mlImages from "../data/ml.json";
 import ssrImages from "../data/ssr.json";
@@ -36,7 +36,7 @@ const TeamMakerPage = () => {
   const team = teams[teamKey] || [];
 
   useEffect(() => {
-    const loadedTeams = getTeamsFromStorage();
+    const loadedTeams = getTeamsFromCookies();
     setTeams(loadedTeams);
   }, []);
 
@@ -48,7 +48,7 @@ const TeamMakerPage = () => {
     const newTeam = [...currentTeam, char];
     const newTeams = { ...teams, [teamKey]: newTeam };
     setTeams(newTeams);
-    saveTeamsToStorage(newTeams);
+    saveTeamsToCookies(newTeams);
   };
 
   const handleRemoveCharacter = (char: TeamCharacter) => {
@@ -56,7 +56,7 @@ const TeamMakerPage = () => {
     const newTeam = currentTeam.filter((c) => c.filename !== char.filename);
     const newTeams = { ...teams, [teamKey]: newTeam };
     setTeams(newTeams);
-    saveTeamsToStorage(newTeams);
+    saveTeamsToCookies(newTeams);
   };
 
   const getTeamTags = (): Record<string, number> => {
@@ -87,11 +87,12 @@ const TeamMakerPage = () => {
   return (
     <div className="p-4 flex gap-4">
       <div className="flex-1">
-        <div className="flex overflow-x-auto space-x-2 mb-2">
+        <h2 className="text-lg mt-6">Type de contenu</h2>
+        <div className="flex overflow-x-auto space-x-2 mb-2 space-evenly justify-center">
           {Object.keys(contentsByMode).map((mode) => (
             <button
               key={mode}
-              className={`px-4 py-2 rounded text-black ${
+            className={`px-20 py-10 rounded text-black ${
                 selectedMode === mode ? "bg-blue-800" : "bg-blue-500"
               }`}
               onClick={() => {
@@ -103,11 +104,12 @@ const TeamMakerPage = () => {
             </button>
           ))}
         </div>
-        <div className="flex overflow-x-auto space-x-2 mb-4">
+        <h2 className="text-lg mt-6">Mob</h2>
+        <div className="flex overflow-x-auto space-x-2 mb-4 justify-center">
           {contentsByMode[selectedMode].map((content) => (
             <button
               key={content}
-              className={`px-4 py-2 rounded text-black ${
+              className={`px-20 py-10 rounded text-black ${
                 selectedContent === content ? "bg-orange-600" : "bg-orange-400"
               }`}
               onClick={() => setSelectedContent(content)}

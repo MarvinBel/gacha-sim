@@ -28,7 +28,21 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           📝 Changelog
         </Typography>
         <Divider sx={{ mb: 2, borderColor: "rgba(255,255,255,0.3)" }} />
+        <Typography
+          variant="h6"
+          component="p"
+          sx={{ fontWeight: "bold", mb: 1 }}
+        >
+          Version 0.1.1 - Team maker:
+        </Typography>
 
+        <Typography
+          id="modal-modal-description"
+          sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
+        >
+          • Teams are now loaded in cookies instead of local storage, so you can
+          see your teams even after closing the browser.
+        </Typography>
         <Typography
           variant="h6"
           component="p"

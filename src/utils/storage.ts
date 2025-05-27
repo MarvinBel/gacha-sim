@@ -1,16 +1,16 @@
-// src/utils/storage.ts
-
+import Cookies from "js-cookie";
 import { TeamData } from "../types/types";
 
-const STORAGE_KEY = "team_data";
+const COOKIE_KEY = "team_data";
 
-export const getTeamsFromStorage = (): TeamData => {
-  if (typeof window === "undefined") return {};
-  const data = localStorage.getItem(STORAGE_KEY);
+export const getTeamsFromCookies = (): TeamData => {
+  const data = Cookies.get(COOKIE_KEY);
   return data ? JSON.parse(data) : {};
 };
 
-export const saveTeamsToStorage = (teams: TeamData) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(teams));
+export const saveTeamsToCookies = (teams: TeamData) => {
+  Cookies.set(COOKIE_KEY, JSON.stringify(teams), {
+    expires: 30,
+    sameSite: "strict",
+  });
 };
