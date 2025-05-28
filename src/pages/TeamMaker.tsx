@@ -1,6 +1,7 @@
+// src/pages/TeamMakerPage.tsx
 import React, { useState, useEffect } from "react";
 import { TeamCharacter, TeamData, FolderName } from "../types/types";
-import { getTeamsFromCookies, saveTeamsToCookies } from "../utils/storage";
+import { getTeamsFromCookies, saveTeamsToCookies } from "../services/StorageService";
 
 import mlImages from "../data/ml.json";
 import ssrImages from "../data/ssr.json";
@@ -84,33 +85,17 @@ const TeamMakerPage = () => {
       (selectedTags.length === 0 || selectedTags.every((t) => char.tags.includes(t)))
   );
 
-  const getBackgroundImage = (mode: string, content: string): string | undefined => {
-    const folder = mode.toLowerCase();
-    const file = `${content}.jpg`;
-    return `/mobIllus/${folder}/${file}`;
-  };
-
-  const currentBackground = getBackgroundImage(selectedMode, selectedContent + "_big");
-  console.log("Current Background:", currentBackground);
   return (
-    <div
-      className="p-4 flex gap-4 min-h-screen"
-      style={{
-        backgroundImage: `url(${currentBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+    <div className="p-4 flex gap-4 min-h-screen bg-black">
       <div className="flex-1">
         <h2 className="text-lg mt-6">Type de contenu</h2>
-        <div className="flex overflow-x-auto space-x-2 mb-2 space-evenly justify-center">
+        <div className="flex overflow-x-auto space-x-2 mb-2 justify-center">
           {Object.keys(contentsByMode).map((mode) => (
             <button
               key={mode}
-              className={`px-20 py-10 rounded text-black ${
-                selectedMode === mode ? "bg-blue-800" : "bg-blue-500"
-              }`}
+              className={`px-20 py-10 rounded text-black relative transition duration-300 ease-in-out border-4 ${
+                selectedMode === mode ? "border-yellow-400 scale-105 shadow-md" : "border-transparent opacity-80"
+              } bg-blue-500`}
               onClick={() => {
                 setSelectedMode(mode);
                 setSelectedContent(contentsByMode[mode][0]);
@@ -122,30 +107,25 @@ const TeamMakerPage = () => {
         </div>
         <h2 className="text-lg mt-6">Mob</h2>
         <div className="flex overflow-x-auto space-x-2 mb-4 justify-center">
-          {contentsByMode[selectedMode].map((content) => {
-            const bgImage = getBackgroundImage(selectedMode, content);
-            return (
-              <button
-                key={content}
-                className={`px-20 py-10 rounded text-black relative overflow-hidden ${
-                  selectedContent === content ? "bg-orange-600" : "bg-orange-400"
-                }`}
-                style={{
-                  backgroundImage: `url(${bgImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
-                }}
-                onClick={() => setSelectedContent(content)}
-              >
-                <div className="z-10 relative">{content}</div>
-              </button>
-            );
-          })}
-        </div>
-        <h2 className="text-xl font-bold mb-2">Team</h2>
+          {contentsByMode[selectedMode].map((content) => (
+            <button
+              key={content}
+              className={`px-20 py-10 rounded text-black font-bold transition duration-300 ease-in-out border-4 ${
+                selectedContent === content ? "border-yellow-400 scale-105 shadow-md" : "border-transparent opacity-90"
+              } bg-orange-400`}
+              onClick={() => setSelectedContent(content)}
+              style={{
+                backgroundImage: `url(/mobIllus/${selectedMode.toLowerCase()}/${content}.jpg)`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <span className="bg-white bg-opacity-80 px-4 py-2 rounded">
+                {content}
+              </span>
+            </button>
+          ))}
+        </div>        <h2 className="text-xl font-bold mb-2">Team</h2>
         <div className="flex space-x-2 mb-4 min-h-[100px] justify-center">
           {team.map((char) => (
             <div key={char.filename} className="relative">

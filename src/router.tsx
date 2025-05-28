@@ -6,6 +6,7 @@ import Summons from './pages/Summons';
 import MySummons from './pages/MySummons';
 import TierMaker from './pages/TierMaker/TierMaker';
 import TeamMaker from './pages/TeamMaker';
+import Countdown from './pages/Countdown';
 
 const Router = () => {
   return (
@@ -16,6 +17,7 @@ const Router = () => {
       <Route path="/mysummons" element={<MySummons />} />
       <Route path="/tierMaker" element={<TierMaker />} />
       <Route path="/teammaker" element={<TeamMaker />} />
+      <Route path="/Countdown" element={<h1><Countdown /></h1>} />
       <Route path="*" element={<h1>404 - Page not found</h1>} />
     </Routes>
   );
