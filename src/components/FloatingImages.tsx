@@ -92,7 +92,7 @@ const FloatingImages: React.FC = () => {
             style={{
               left: `${imagesRef.current[index].x}px`,
               top: `${imagesRef.current[index].y}px`,
-              opacity: 0.05,
+              opacity: 1,
               width: "100px",
               height: "100px",
               borderRadius: "50%",
