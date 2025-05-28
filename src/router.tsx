@@ -6,7 +6,7 @@ import Summons from './pages/Summons';
 import MySummons from './pages/MySummons';
 import TierMaker from './pages/TierMaker/TierMaker';
 import TeamMaker from './pages/TeamMaker';
-import Countdown from './pages/Countdown';
+import Countdown from './pages/CountdownPage';
 
 const Router = () => {
   return (

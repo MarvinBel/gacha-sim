@@ -29,7 +29,7 @@ const Countdown: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-900 text-white">
+    <div className="flex justify-center items-center min-h-screen text-white relative z-10">
       <div className="text-center p-8 bg-gray-800 rounded-lg shadow-lg">
         <div className="text-6xl font-mono">{timeLeft}</div>
       </div>
