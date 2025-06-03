@@ -33,7 +33,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
-          Version 0.2.0 - Countdown:
+          Version 0.2.1 - Countdown:
         </Typography>
 
         <Typography
@@ -41,6 +41,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
         >
           • Tic tac, there is now a countdown page leading to the official launch of the game !!
+          {"\n"}• The banners now have images that resemble the actual game.
         </Typography>
         <Typography
           variant="h6"

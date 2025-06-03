@@ -91,29 +91,35 @@ const saveToCookie = (summons: Summon[]) => {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <aside style={{
-        width: '5%', padding: '1rem', backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
+        width: '10%', padding: '1rem', backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
         color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
       }}>
-        {['Limited', 'Perma', 'ML'].map(type => (
-          <button
-            key={type}
-            onClick={() => setSelectedType(type)}
-            style={{
-              display: 'block',
-              marginBottom: '1rem',
-              padding: '0.75rem 1rem',
-              width: '100%',
-              fontSize: '1rem',
-              borderRadius: 6,
-              border: selectedType === type ? '2px solid #007bff' : '1px solid #ccc',
-              backgroundColor: window.localStorage.getItem('theme') === 'dark' ? '#222' : '#eee',
-              color: window.localStorage.getItem('theme') === 'dark' ? '#fff' : '#000',
-              cursor: 'pointer',
-            }}
-          >
-            {type}
-          </button>
-        ))}
+{['Limited', 'Perma', 'ML'].map(type => (
+  <button
+    key={type}
+    onClick={() => setSelectedType(type)}
+    style={{
+      display: 'block',
+      marginBottom: '1rem',
+      padding: '0.75rem 1rem',
+      width: '100%',
+      height: '100px', // tu peux ajuster la hauteur
+      fontSize: '1rem',
+      borderRadius: 6,
+      backgroundImage: `url(/banners/${type.toLowerCase()}.png)`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      border: selectedType === type ? '2px solid yellow' : 'none',
+      cursor: 'pointer',
+      color: 'white',
+      fontWeight: 'bold',
+      textShadow: '0 0 4px black',
+    }}
+  >
+  </button>
+))}
+
       </aside>
 
       <main
