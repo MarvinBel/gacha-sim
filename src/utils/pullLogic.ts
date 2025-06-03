@@ -11,7 +11,8 @@ interface PullResult {
 }
 
 export function performSinglePull(pityCount: number, banner: Banner, srPityCount: number): PullResult {
-  const ssr = getCharactersByFolderName('ssr').filter(character => character.title !== 'Lian');
+  const pssr = getCharactersByFolderName('ssr').filter(character => character.title !== 'Lian');
+  const ssr = pssr.filter(character => character.title !== 'Hoyan');
   const ml = getCharactersByFolderName('ml');
   const sr = getCharactersByFolderName('sr');
   const r = getCharactersByFolderName('r');

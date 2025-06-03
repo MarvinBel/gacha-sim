@@ -17,5 +17,6 @@
   { "filename": "Veronica.jpg", "title": "Veronica", "color": "red", "tags": ["debuff", "sustain", "cheat death"], "role": ["debuff"], "folder": "ssr" },
   { "filename": "Tsukiyomi.jpg", "title": "Tsukiyomi", "color": "blue", "tags": ["advance", "debuff", "buff", "speed", "cooldown"], "role": ["support"], "folder": "ssr" },
   { "filename": "Hoyan.jpg", "title": "Hoyan", "color": "green", "tags": ["revive", "anti heal", "dps"], "role": ["dps"], "folder": "ssr" },
-  { "filename": "Lian.jpg", "title": "Lian", "color": "red", "tags": ["delay", "dps"], "role": ["dps"], "folder": "ssr" }
+  { "filename": "Lian.jpg", "title": "Lian", "color": "red", "tags": ["delay", "dps"], "role": ["dps"], "folder": "ssr" },
+  { "filename": "Mizuki_Makoto.png", "title": "Mizuki Makoto", "color": "green", "tags": ["dispel", "dps", "anti heal"], "role": ["dps"], "folder": "ssr" }
 ]

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getSummons, clearSummons } from '../services/StorageService';
+import { getSummons, clearSummons, resetSummonCount, getSummonCount } from '../services/StorageService';
 import { Summon } from '../types/types';
 
 const MySummons: React.FC = () => {
+  const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
+  const [pityCounter, setPityCounter] = useState<number>(0);
   const [summons, setSummons] = useState<Summon[]>([]);
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
 
@@ -17,14 +19,16 @@ const MySummons: React.FC = () => {
 
   const handleClearSummons = () => {
     clearSummons();
-    setSummons([]);
+    setCurrentPulls([]);
+    setPityCounter(0);
+    resetSummonCount();
   };
 
   return (
     <div style={{ padding: 20 }}>
       <div style={{ display: 'flex', gap: "20%"}}>
       <h1>My Summons</h1>
-      <h1>Total summon : {window.localStorage.getItem("summonCount")}</h1>
+      <h1>Total summon : {getSummonCount()}</h1>
       </div>
       <div style={{ marginBottom: 20, display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <button

@@ -42,6 +42,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
         >
           • Tic tac, there is now a countdown page leading to the official launch of the game !!
           {"\n"}• The banners now have images that resemble the actual game.
+          {"\n"}• Added Mio & Mizuki Makoto to the pulls ! Also removed Hoyan as she won't be part of the pull on release. Thanks to Zelpex for the images & info about Hoyan ! :D
         </Typography>
         <Typography
           variant="h6"
