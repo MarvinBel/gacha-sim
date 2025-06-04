@@ -17,7 +17,7 @@ const HowMuchTo: React.FC = () => {
   const [results, setResults] = useState<any[]>([]);
   const [pullCount, setPullCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(true);
   const [search, setSearch] = useState("");
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
   const [showSROnly, setShowSROnly] = useState(false);
