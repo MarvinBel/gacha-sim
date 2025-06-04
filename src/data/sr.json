@@ -23,5 +23,6 @@
   { "filename": "Dinah.jpg", "title": "Dinah", "color": "red", "tags": ["debuff", "delay", "advance"], "role": ["debuff"], "folder": "sr" },
   { "filename": "Viper.jpg", "title": "Viper", "color": "blue", "tags": ["debuff", "counter", "buff", "dispel", "delay"], "role": ["debuff"], "folder": "sr" },
   { "filename": "Dorothy-wisher.jpg", "title": "Dorothy wisher", "color": "red", "tags": ["advance", "buff", "sustain", "delay", "cooldown"], "role": ["support"], "folder": "sr" },
-  { "filename": "Yang.jpg", "title": "Yang", "color": "blue", "tags": ["advance", "buff", "dispel"], "role": ["support"], "folder": "sr" }
+  { "filename": "Yang.jpg", "title": "Yang", "color": "blue", "tags": ["advance", "buff", "dispel"], "role": ["support"], "folder": "sr" },
+  { "filename": "Mizuki_Makoto.png", "title": "Mizuki Makoto", "color": "green", "tags": ["dispel", "dps", "anti heal"], "role": ["dps"], "folder": "sr" }
 ]
