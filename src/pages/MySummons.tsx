@@ -1,49 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { getSummons, clearSummons, resetSummonCount, getSummonCount } from '../services/StorageService';
+import React, { useEffect, useState } from 'react';
+import { getSummons, clearSummons, getSummonCount, resetSummonCount } from '../services/StorageService';
 import { Summon } from '../types/types';
 
 const MySummons: React.FC = () => {
-  const [currentPulls, setCurrentPulls] = useState<Summon[]>([]);
-  const [pityCounter, setPityCounter] = useState<number>(0);
-  const [summons, setSummons] = useState<Summon[]>([]);
+  const [summons, setSummons] = useState<(Summon & { pullNumber: number })[]>([]);
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
 
   useEffect(() => {
-    const savedSummons = getSummons();
-    setSummons(savedSummons);
+    const stored = getSummons();
+    const enriched = stored.map((s, i) => ({
+      ...s,
+      pullNumber: stored.length - i,
+    }));
+    setSummons(enriched);
   }, []);
-
-  const displayedSummons = showSSRAndMLOnly
-    ? summons.filter(s => s.character.folder === 'ssr' || s.character.folder === 'ml')
-    : summons;
 
   const handleClearSummons = () => {
     clearSummons();
-    setCurrentPulls([]);
-    setPityCounter(0);
     resetSummonCount();
+    setSummons([]);
   };
+
+  const filteredSummons = showSSRAndMLOnly
+    ? summons.filter(s => ['ssr', 'ml'].includes(s.character.folder))
+    : summons;
 
   return (
     <div style={{ padding: 20 }}>
-      <div style={{ display: 'flex', gap: "20%"}}>
-      <h1>My Summons</h1>
-      <h1>Total summon : {getSummonCount()}</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>My Summons</h1>
+        <h2>Total summons: {getSummonCount()}</h2>
       </div>
-      <div style={{ marginBottom: 20, display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: 20 }}>
         <button
-          onClick={() => setShowSSRAndMLOnly(!showSSRAndMLOnly)}
+          onClick={() => setShowSSRAndMLOnly(prev => !prev)}
           style={{
             padding: '0.5rem 1rem',
             borderRadius: 6,
             cursor: 'pointer',
-            backgroundColor: showSSRAndMLOnly ? '#007bff' : window.localStorage.getItem('theme') === 'dark' ? "black" :'#ddd',
-            border: window.localStorage.getItem('theme') === 'dark' ? "2px solid #ddd" : "none",
-            color:  window.localStorage.getItem('theme') === 'dark' ? "#ddd" :'black',
-            flexGrow: 1,
+            backgroundColor: showSSRAndMLOnly ? '#007bff' : '#ddd',
+            color: showSSRAndMLOnly ? 'white' : 'black',
+            border: 'none'
           }}
         >
-          {showSSRAndMLOnly ? 'Display all' : 'Display only SSR and ML'}
+          {showSSRAndMLOnly ? 'Show All' : 'Only SSR & ML'}
         </button>
 
         <button
@@ -51,73 +52,76 @@ const MySummons: React.FC = () => {
           style={{
             padding: '0.5rem 1rem',
             borderRadius: 6,
-            border: 'none',
             cursor: 'pointer',
             backgroundColor: '#dc3545',
             color: 'white',
-            flexGrow: 1,
+            border: 'none'
           }}
         >
-          Delete all summons
+          Clear All Summons
         </button>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-        {displayedSummons.length === 0 && <p>No summon found.</p>}
+      {filteredSummons.length === 0 ? (
+        <p>No summons found.</p>
+      ) : (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+          {filteredSummons.map((s, idx) => {
+            const pityColor =
+              s.pityType === 'hard pity' ? 'red' :
+              s.pityType === 'soft pity' ? 'orange' : '#aaa';
 
-        {displayedSummons.map((summon, idx) => {
-          let pityColor = '#000';
-          if (summon.pityType === 'soft pity') pityColor = 'orange';
-          else if (summon.pityType === 'hard pity') pityColor = 'red';
-          
+            const bgColor =
+              s.character.folder === 'ssr' ? 'yellow' :
+              s.character.folder === 'ml' ? 'pink' :
+              s.character.folder === 'sr' ? 'violet' : 'lightblue';
 
-          const showPityLabel = summon.pityType !== 'no pity';
-
-          return (
-            <div
-              key={`${summon.timestamp}-${idx}`}
-              style={{
-                width: 120,
-                textAlign: 'center',
-                border: `2px solid ${showPityLabel ? pityColor : '#ddd'}`,
-                backgroundColor : (summon.character.folder === "ssr") || (summon.character.folder === "ml") ? "yellow" : "lightblue",
-                color:  'black',
-                borderRadius: 8,
-                padding: 8,
-                boxShadow: '1px 1px 5px rgba(0,0,0,0.1)',
-              }}
-            >
-              <img
-                src={`/characters/${summon.character.folder}/${summon.character.filename}`}
-                alt={summon.character.title}
-                style={{ width: '100%', height: 120, objectFit: 'contain', borderRadius: 6 }}
-              />
-              <p
+            return (
+              <div
+                key={`${s.timestamp}-${idx}`}
                 style={{
-                  margin: 4,
-                  color: showPityLabel ? "black" : undefined,
-                  fontWeight: showPityLabel ? 'bold' : undefined,
+                  width: 120,
+                  textAlign: 'center',
+                  border: `2px solid ${pityColor}`,
+                  backgroundColor: bgColor,
+                  borderRadius: 8,
+                  padding: 8,
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  height: 200,
                 }}
               >
-                {summon.character.title}
-              </p>
-              {showPityLabel && (
+                <div>
+                  <img
+                    src={`/characters/${s.character.folder}/${s.character.filename}`}
+                    alt={s.character.title}
+                    style={{ width: '100%', height: 100, objectFit: 'contain', borderRadius: 6 }}
+                  />
+                  <p style={{ fontWeight: 'bold', margin: 4 }}>{s.character.title}</p>
+                  {s.pityType !== 'no pity' && (
+                    <p style={{ fontSize: '0.9rem', color: pityColor }}>{s.pityType}</p>
+                  )}
+                </div>
                 <p
-                  style={{
-                    marginTop: 6,
-                    fontWeight: 'bold',
-                    fontSize: '1.2rem',
-                    color: "black",
-                    textTransform: 'capitalize',
-                  }}
-                >
-                  {summon.pityType}
+                        style={{
+                          fontSize: "0.7rem",
+                          fontWeight: "bold",
+                          background: "#fff",
+                          padding: "2px 6px",
+                          borderRadius: 4,
+                          boxShadow: "0 0 2px rgba(0,0,0,0.2)",
+                          color: "black",
+                        }}
+                      >
+                  #{s.pullNumber}
                 </p>
-              )}
-            </div>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

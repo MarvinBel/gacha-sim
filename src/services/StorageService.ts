@@ -2,15 +2,6 @@ import Cookies from "js-cookie";
 import { Summon, PityHistory } from '../types/types';
 import { TeamData } from "../types/types";
 
-export const getSummons = (): Summon[] => {
-  const data = Cookies.get('summons');
-  return data ? JSON.parse(data) : [];
-};
-
-export const saveSummon = (summon: Summon) => {
-  const current = getSummons();
-  Cookies.set('summons', JSON.stringify([summon, ...current]), { expires: 30 });
-};
 
 export const getPity = (banner: string): number => {
   const data = Cookies.get(`pity-${banner}`);
@@ -48,11 +39,6 @@ export async function loadAllSummons(): Promise<Summon[]> {
   }
 }
 
-export function clearSummons() {
-  Cookies.remove('summons');
-  Cookies.set("summonCount", "0", { expires: 30 });
-}
-
 const SUMMON_COUNT_KEY = "summonCount";
 
 export const getSummonCount = (): number => {
@@ -87,3 +73,20 @@ export const saveTeamsToCookies = (teams: TeamData) => {
     sameSite: "strict",
   });
 };
+
+// ✅ Utiliser localStorage à la place de cookies
+export const getSummons = (): Summon[] => {
+  const data = localStorage.getItem('summons');
+  return data ? JSON.parse(data) : [];
+};
+
+export const saveSummon = (summon: Summon) => {
+  const current = getSummons();
+  const updated = [summon, ...current];
+  localStorage.setItem('summons', JSON.stringify(updated));
+};
+
+export function clearSummons() {
+  localStorage.removeItem('summons');
+  Cookies.set("summonCount", "0", { expires: 30 });
+}

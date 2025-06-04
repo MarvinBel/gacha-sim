@@ -33,7 +33,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
-          Version 0.3.1 - How much to ?:
+          Version 0.3.3 - How much to ?:
         </Typography>
 
         <Typography
@@ -44,7 +44,8 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           {"\n"}• Removed Lian & Hoyan from the list, they were causing crashed as it couldn't be pulled it made a infinite loop.
           {"\n"}• Put the LDs characters on top of the list.
           {"\n"}• Added a donate button, don't feel obligated and only do it if you WANT and you CAN. Tysm for using my website ❤️
-
+          {"\n"}• The pull order is now displayed on the pulled unit on the different pages so you know when you got which character !
+          {"\n"}• The "MySummons" now displays the pull order of the characters, so you can see which character you got first. Also pulled characters are now back in the localStorage as coockies can't store this much informations which caused this page to only show a few characters.
         </Typography>
         <Typography
           variant="h6"

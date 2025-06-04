@@ -43,7 +43,7 @@ const HowMuchTo: React.FC = () => {
     while (found.length < selectedCharacters.length) {
       const { pull, newPity } = performSinglePull(pity, "perma", srPity);
       pity = newPity;
-      allPulls.push(pull);
+      allPulls.push({ ...pull, pullNumber: allPulls.length + 1 });
 
       const title = pull.character.title;
       if (selectedCharacters.includes(title) && !found.includes(title)) {
@@ -227,6 +227,17 @@ const HowMuchTo: React.FC = () => {
                             {pull.pityType}
                           </p>
                         )}
+                        <p style={{
+                          fontSize: "0.7rem",
+                          fontWeight: "bold",
+                          background: "#fff",
+                          padding: "2px 6px",
+                          borderRadius: 4,
+                          boxShadow: "0 0 2px rgba(0,0,0,0.2)",
+                          color: "black",
+                        }}>
+                          Pull #{pull.pullNumber}
+                        </p>
                       </div>
                     </div>
                   );
