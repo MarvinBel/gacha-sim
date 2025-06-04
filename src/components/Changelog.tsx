@@ -33,7 +33,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
-          Version 0.3.0 - How much to ?:
+          Version 0.3.1 - How much to ?:
         </Typography>
 
         <Typography
@@ -41,6 +41,9 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
         >
           • Added a new page where you can calculate how many pulls you need to get a specific character. (Thanks to Zelpex for the idea !)
+          {"\n"}• Removed Lian & Hoyan from the list, they were causing crashed as it couldn't be pulled it made a infinite loop.
+          {"\n"}• Put the LDs characters on top of the list.
+
         </Typography>
         <Typography
           variant="h6"

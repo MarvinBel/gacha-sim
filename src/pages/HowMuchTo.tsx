@@ -6,10 +6,10 @@ import rImages from "../data/r.json";
 import mlImages from "../data/ml.json";
 
 const folders = [
+  { name: "ml", images: mlImages },
   { name: "ssr", images: ssrImages },
   { name: "sr", images: srImages },
   { name: "r", images: rImages },
-  { name: "ml", images: mlImages },
 ];
 
 const HowMuchTo: React.FC = () => {
@@ -67,7 +67,9 @@ const HowMuchTo: React.FC = () => {
       >
         {drawerOpen && (
           <>
-            <h2 className="text-lg font-bold mb-2 text-center">Select characters</h2>
+            <h2 className="text-lg font-bold mb-2 text-center">
+              Select characters
+            </h2>
 
             <input
               type="text"
@@ -80,8 +82,10 @@ const HowMuchTo: React.FC = () => {
             <div className="grid grid-cols-2 gap-2">
               {folders.map(({ name, images }) =>
                 images
-                  .filter((char) =>
-                    char.title.toLowerCase().includes(search.toLowerCase())
+                  .filter(
+                    (char) =>
+                      !["Lian", "Hoyan"].includes(char.title) &&
+                      char.title.toLowerCase().includes(search.toLowerCase())
                   )
                   .map((char) => (
                     <button
@@ -158,12 +162,17 @@ const HowMuchTo: React.FC = () => {
         {/* Result */}
         {pullCount > 0 && (
           <div>
-            <h2 className="text-lg font-semibold mb-2">Total Pulls: {pullCount}</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              Total Pulls: {pullCount}
+            </h2>
             <div className="flex flex-wrap justify-center gap-3">
               {results
                 .filter((pull) => {
                   if (showSSRAndMLOnly)
-                    return pull.character.folder === "ssr" || pull.character.folder === "ml";
+                    return (
+                      pull.character.folder === "ssr" ||
+                      pull.character.folder === "ml"
+                    );
                   if (showSROnly) return pull.character.folder === "sr";
                   return true;
                 })
@@ -183,7 +192,8 @@ const HowMuchTo: React.FC = () => {
                       ? "bg-violet-200"
                       : "bg-blue-100";
 
-                  const isTargetFound = selectedCharacters.includes(pull.character.title) &&
+                  const isTargetFound =
+                    selectedCharacters.includes(pull.character.title) &&
                     foundCharacters.includes(pull.character.title);
 
                   return (
@@ -209,7 +219,9 @@ const HowMuchTo: React.FC = () => {
                           alt={pull.character.title}
                           className="w-full h-24 object-contain rounded"
                         />
-                        <p className="text-xs font-bold">{pull.character.title}</p>
+                        <p className="text-xs font-bold">
+                          {pull.character.title}
+                        </p>
                         {pull.pityType !== "no pity" && (
                           <p className="text-xs capitalize text-red-500 font-semibold">
                             {pull.pityType}
