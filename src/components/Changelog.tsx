@@ -43,6 +43,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           • Added a new page where you can calculate how many pulls you need to get a specific character. (Thanks to Zelpex for the idea !)
           {"\n"}• Removed Lian & Hoyan from the list, they were causing crashed as it couldn't be pulled it made a infinite loop.
           {"\n"}• Put the LDs characters on top of the list.
+          {"\n"}• Added a donate button, don't feel obligated and only do it if you WANT and you CAN. Tysm for using my website ❤️
 
         </Typography>
         <Typography
