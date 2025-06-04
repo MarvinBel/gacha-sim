@@ -13,27 +13,35 @@ import {
   incrementSummonCount,
   resetSummonCount,
   getSSRStats,
+  getPity,
+  setPity,
 } from "../services/StorageService";
 import { Summon } from "../types/types";
+
+const PITY_KEYS = {
+  perma: "pityCounter_perma",
+  ml: "pityCounter_ml",
+  limited: "pityCounter_limited",
+};
 
 type SummonWithNumber = Summon & { pullNumber: number };
 
 const Summons: React.FC = () => {
-  const [currentPulls, setCurrentPulls] = useState<SummonWithNumber[]>([]);
-  const [pityCounter, setPityCounter] = useState<number>(0);
-  const [srPityCounter, setSRPityCounter] = useState<number>(0);
   const [selectedType, setSelectedType] = useState<string | null>("Perma");
-  const [custom, setCustom] = useState<number>(300);
-  const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
-  const [showSROnly, setShowSROnly] = useState(false);
-  const { average, totalSSR, totalPulls } = getSSRStats();
-
   const banner =
     selectedType === "Perma" ||
     selectedType === "ML" ||
     selectedType === "Limited"
       ? (selectedType.toLowerCase() as "perma" | "ml" | "limited")
       : "perma";
+
+  const [pityCounter, setPityCounter] = useState<number>(() => getPity(banner));
+  const [srPityCounter, setSRPityCounter] = useState<number>(0);
+  const [currentPulls, setCurrentPulls] = useState<SummonWithNumber[]>([]);
+  const [custom, setCustom] = useState<number>(300);
+  const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
+  const [showSROnly, setShowSROnly] = useState(false);
+  const { average, totalSSR, totalPulls } = getSSRStats();
 
   const displayedSummons = showSSRAndMLOnly
     ? currentPulls.filter(
@@ -51,6 +59,10 @@ const Summons: React.FC = () => {
     if (showSSRAndMLOnly && showSROnly) setShowSSRAndMLOnly(false);
   }, [showSROnly]);
 
+  useEffect(() => {
+    setPityCounter(getPity(banner));
+  }, [banner]);
+
   const handlePullX1 = () => {
     const { pull, newPity } = performSinglePull(
       pityCounter,
@@ -61,6 +73,7 @@ const Summons: React.FC = () => {
     const enriched = { ...pull, pullNumber };
     setCurrentPulls([enriched]);
     setPityCounter(newPity);
+    setPity(banner, newPity);
     saveToCookie([enriched]);
   };
 
@@ -72,6 +85,7 @@ const Summons: React.FC = () => {
     }));
     setCurrentPulls(enrichedPulls);
     setPityCounter(newPity);
+    setPity(banner, newPity);
     saveToCookie(enrichedPulls);
   };
 
@@ -118,6 +132,7 @@ const Summons: React.FC = () => {
     clearSummons();
     setCurrentPulls([]);
     setPityCounter(0);
+    setPity(banner, 0);
     resetSummonCount();
   };
 

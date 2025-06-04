@@ -2,8 +2,8 @@ import Cookies from "js-cookie";
 import { Summon, PityHistory } from '../types/types';
 import { TeamData } from "../types/types";
 
-
-export const getPity = (banner: string): number => {
+/* --- Pity Management via Cookies (legacy) --- */
+export const getPityy = (banner: string): number => {
   const data = Cookies.get(`pity-${banner}`);
   return data ? parseInt(data, 10) : 0;
 };
@@ -29,6 +29,7 @@ export const getPityHistory = (): PityHistory[] => {
   return data ? JSON.parse(data) : [];
 };
 
+/* --- Summons Data --- */
 export async function loadAllSummons(): Promise<Summon[]> {
   try {
     const data = Cookies.get('summons');
@@ -59,7 +60,7 @@ export const resetSummonCount = () => {
   setSummonCount(0);
 };
 
-
+/* --- Teams --- */
 const COOKIE_KEY = "team_data";
 
 export const getTeamsFromCookies = (): TeamData => {
@@ -74,6 +75,7 @@ export const saveTeamsToCookies = (teams: TeamData) => {
   });
 };
 
+/* --- LocalStorage Summons --- */
 export const getSummons = (): Summon[] => {
   const data = localStorage.getItem('summons');
   return data ? JSON.parse(data) : [];
@@ -90,7 +92,7 @@ export function clearSummons() {
   Cookies.set("summonCount", "0", { expires: 30 });
 }
 
-
+/* --- SSR Stats --- */
 export function getSSRStats() {
   const summons = getSummons();
 
@@ -107,4 +109,20 @@ export function getSSRStats() {
     totalSSR: ssrCount,
     totalPulls: total,
   };
+}
+
+/* --- Multi-Banner Pity Management via LocalStorage --- */
+export function getPity(banner: string): number {
+  const allPities = JSON.parse(localStorage.getItem("pityCounters") || "{}");
+  return allPities[banner] || 0;
+}
+
+export function setPity(banner: string, value: number) {
+  const allPities = JSON.parse(localStorage.getItem("pityCounters") || "{}");
+  allPities[banner] = value;
+  localStorage.setItem("pityCounters", JSON.stringify(allPities));
+}
+
+export function clearAllPities() {
+  localStorage.removeItem("pityCounters");
 }

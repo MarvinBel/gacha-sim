@@ -33,7 +33,7 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
-          Version 0.3.4 - How much to ?:
+          Version 0.3.5 - How much to ?:
         </Typography>
 
         <Typography
@@ -47,7 +47,8 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           {"\n"}• The pull order is now displayed on the pulled unit on the different pages so you know when you got which character !
           {"\n"}• The "MySummons" now displays the pull order of the characters, so you can see which character you got first. Also pulled characters are now back in the localStorage as coockies can't store this much informations which caused this page to only show a few characters.
           {"\n"}• Added an average SSR numbers tu Summons page & HowMuchTo page !
-          {"\n"}• Fixed the text color in the input from Summons page.
+          {"\n"}• Fixed the text color in the input from Summons page (Thanks teiragmon !).
+          {"\n"}• Fixed the pity counter resetting when changing tab on the website ! (Thanks teiragmon !)
         </Typography>
         <Typography
           variant="h6"
