@@ -7,6 +7,7 @@ import MySummons from './pages/MySummons';
 import TierMaker from './pages/TierMaker/TierMaker';
 import TeamMaker from './pages/TeamMaker';
 import Countdown from './pages/CountdownPage';
+import HowMuchTo from './pages/HowMuchTo';
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
       <Route path="/tierMaker" element={<TierMaker />} />
       <Route path="/teammaker" element={<TeamMaker />} />
       <Route path="/Countdown" element={<h1><Countdown /></h1>} />
+      <Route path="/HowMuchTo" element={<h1><HowMuchTo /></h1>} />
       <Route path="*" element={<h1>404 - Page not found</h1>} />
     </Routes>
   );

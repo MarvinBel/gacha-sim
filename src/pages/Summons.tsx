@@ -13,9 +13,6 @@ const Summons: React.FC = () => {
   const [custom, setCustom] = useState<number>(300);
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
   const [showSROnly, setShowSROnly] = useState(false);
-  
-
-
 
   const banner = (selectedType === 'Perma' || selectedType === 'ML' || selectedType === 'Limited')
     ? selectedType.toLowerCase() as 'perma' | 'ml' | 'limited'

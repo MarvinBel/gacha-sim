@@ -33,6 +33,20 @@ const Changelog: React.FC<ChangelogProps> = ({ open, handleClose }) => {
           component="p"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
+          Version 0.3.0 - How much to ?:
+        </Typography>
+
+        <Typography
+          id="modal-modal-description"
+          sx={{ whiteSpace: "pre-line", lineHeight: 1.6 }}
+        >
+          • Added a new page where you can calculate how many pulls you need to get a specific character. (Thanks to Zelpex for the idea !)
+        </Typography>
+        <Typography
+          variant="h6"
+          component="p"
+          sx={{ fontWeight: "bold", mb: 1 }}
+        >
           Version 0.2.1 - Countdown:
         </Typography>
 
