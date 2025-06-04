@@ -12,6 +12,7 @@ import {
   getSummonCount,
   incrementSummonCount,
   resetSummonCount,
+  getSSRStats,
 } from "../services/StorageService";
 import { Summon } from "../types/types";
 
@@ -25,6 +26,7 @@ const Summons: React.FC = () => {
   const [custom, setCustom] = useState<number>(300);
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
   const [showSROnly, setShowSROnly] = useState(false);
+  const { average, totalSSR, totalPulls } = getSSRStats();
 
   const banner =
     selectedType === "Perma" ||
@@ -170,6 +172,9 @@ const Summons: React.FC = () => {
           <>
             <h2>{selectedType} Summon</h2>
             <p>Total summon count : {getSummonCount()}</p>
+            <p>
+              SSR average : {totalSSR} / {totalPulls} pulls ({(average * 100).toFixed(2)}%)
+            </p>
             <p
               style={{
                 marginBottom: "1rem",
@@ -201,7 +206,7 @@ const Summons: React.FC = () => {
                 value={custom}
                 onChange={handleChangeCustom}
                 min={0}
-                style={{ width: "80px" }}
+                style={{ width: "80px", color: "black"}}
               />
               <button
                 onClick={handlePullCustom}

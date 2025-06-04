@@ -74,7 +74,6 @@ export const saveTeamsToCookies = (teams: TeamData) => {
   });
 };
 
-// ✅ Utiliser localStorage à la place de cookies
 export const getSummons = (): Summon[] => {
   const data = localStorage.getItem('summons');
   return data ? JSON.parse(data) : [];
@@ -89,4 +88,23 @@ export const saveSummon = (summon: Summon) => {
 export function clearSummons() {
   localStorage.removeItem('summons');
   Cookies.set("summonCount", "0", { expires: 30 });
+}
+
+
+export function getSSRStats() {
+  const summons = getSummons();
+
+  if (!summons.length) {
+    return { average: 0, totalSSR: 0, totalPulls: 0 };
+  }
+
+  const ssrCount = summons.filter(s => s.character.folder === "ssr").length;
+  const total = summons.length;
+  const average = +(ssrCount / total).toFixed(4); // Ex: 0.0125 = 1.25 %
+
+  return {
+    average,
+    totalSSR: ssrCount,
+    totalPulls: total,
+  };
 }

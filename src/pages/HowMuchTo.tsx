@@ -22,6 +22,8 @@ const HowMuchTo: React.FC = () => {
   const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
   const [showSROnly, setShowSROnly] = useState(false);
   const [foundCharacters, setFoundCharacters] = useState<string[]>([]);
+  const [ssrCount, setSsrCount] = useState(0);
+  const [ssrAverage, setSsrAverage] = useState(0);
 
   if (showSSRAndMLOnly && showSROnly) setShowSROnly(false);
 
@@ -51,9 +53,14 @@ const HowMuchTo: React.FC = () => {
       }
     }
 
+    const ssrFound = allPulls.filter(p => p.character.folder === "ssr").length;
+    const ssrAvg = ssrFound / allPulls.length;
+
     setResults(allPulls);
     setFoundCharacters(found);
     setPullCount(allPulls.length);
+    setSsrCount(ssrFound);
+    setSsrAverage(ssrAvg);
     setLoading(false);
   };
 
@@ -162,9 +169,12 @@ const HowMuchTo: React.FC = () => {
         {/* Result */}
         {pullCount > 0 && (
           <div>
-            <h2 className="text-lg font-semibold mb-2">
+            <h2 className="text-lg font-semibold mb-1">
               Total Pulls: {pullCount}
             </h2>
+            <p className="text-sm text-white-700 dark:text-gray-300 mb-4">
+              SSR: {ssrCount} pulls ({(ssrAverage * 100).toFixed(2)}%)
+            </p>
             <div className="flex flex-wrap justify-center gap-3">
               {results
                 .filter((pull) => {
@@ -219,7 +229,7 @@ const HowMuchTo: React.FC = () => {
                           alt={pull.character.title}
                           className="w-full h-24 object-contain rounded"
                         />
-                        <p className="text-xs font-bold">
+                        <p className="text-xs font-bold text-black dark:text-white mt-1">
                           {pull.character.title}
                         </p>
                         {pull.pityType !== "no pity" && (
@@ -227,15 +237,17 @@ const HowMuchTo: React.FC = () => {
                             {pull.pityType}
                           </p>
                         )}
-                        <p style={{
-                          fontSize: "0.7rem",
-                          fontWeight: "bold",
-                          background: "#fff",
-                          padding: "2px 6px",
-                          borderRadius: 4,
-                          boxShadow: "0 0 2px rgba(0,0,0,0.2)",
-                          color: "black",
-                        }}>
+                        <p
+                          style={{
+                            fontSize: "0.7rem",
+                            fontWeight: "bold",
+                            background: "#fff",
+                            padding: "2px 6px",
+                            borderRadius: 4,
+                            boxShadow: "0 0 2px rgba(0,0,0,0.2)",
+                            color: "black",
+                          }}
+                        >
                           Pull #{pull.pullNumber}
                         </p>
                       </div>
