@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 const Countdown: React.FC = () => {
-  const targetDate = new Date("2025-06-05T12:00:00");
+  const targetDateParis = new Date("2025-06-05T12:00:00+02:00");
+  
+  const targetDate = targetDateParis.toISOString();
 
   const [timeLeft, setTimeLeft] = useState<string>("");
 
   const calculateTimeLeft = () => {
     const now = new Date();
-    const difference = targetDate.getTime() - now.getTime();
+    const difference = new Date(targetDate).getTime() - now.getTime();
     if (difference <= 0) {
       setTimeLeft("00:00:00:00");
       return;
