@@ -12,203 +12,225 @@ const folders = [
   { name: "r", images: rImages },
 ];
 
-const HowMuchTo: React.FC = () => {
+interface Character {
+  title: string;
+  filename: string;
+}
+
+interface PullResult {
+  character: {
+    title: string;
+    folder: string;
+    filename: string;
+  };
+  pityType: "soft pity" | "hard pity" | "no pity";
+  pullNumber: number;
+}
+
+type FilterCategory = "all" | "ssr" | "ml" | "sr";
+
+export default function HowMuchTo() {
+  const allCharacters: { folder: string; title: string; filename: string }[] = folders.flatMap(
+    (folder) =>
+      folder.images.map((char: Character) => ({
+        folder: folder.name,
+        title: char.title,
+        filename: char.filename,
+      }))
+  );
+
   const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
-  const [results, setResults] = useState<any[]>([]);
-  const [pullCount, setPullCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(true);
-  const [search, setSearch] = useState("");
-  const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
-  const [showSROnly, setShowSROnly] = useState(false);
+  const [pullResults, setPullResults] = useState<PullResult[]>([]);
   const [foundCharacters, setFoundCharacters] = useState<string[]>([]);
-  const [ssrCount, setSsrCount] = useState(0);
-  const [ssrAverage, setSsrAverage] = useState(0);
+  const [maxPulls, setMaxPulls] = useState<number>(
+    parseInt(localStorage.getItem("howMuchToMax") || "500", 10)
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [leftFilter, setLeftFilter] = useState<FilterCategory>("all");
+  const [rightFilter, setRightFilter] = useState<FilterCategory>("all");
 
-  if (showSSRAndMLOnly && showSROnly) setShowSROnly(false);
+  const filteredCharacters = allCharacters.filter((char) => {
+    if (leftFilter !== "all" && char.folder !== leftFilter) return false;
+    return char.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
-  const toggleCharacter = (title: string) => {
+  const handleSelectCharacter = (title: string) => {
     setSelectedCharacters((prev) =>
-      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
+      prev.includes(title)
+        ? prev.filter((t) => t !== title)
+        : [...prev, title]
     );
   };
 
-  const handleStart = () => {
-    if (selectedCharacters.length === 0) return;
-    setLoading(true);
-
-    let found: string[] = [];
-    let allPulls: any[] = [];
+  const handleStart = async () => {
+    const pulls: PullResult[] = [];
+    const found: string[] = [];
     let pity = 0;
     let srPity = 0;
+    let count = 0;
 
-    while (found.length < selectedCharacters.length) {
-      const { pull, newPity } = performSinglePull(pity, "perma", srPity);
+    while (found.length < selectedCharacters.length && count < maxPulls) {
+      const { pull, newPity, newSrPity } = performSinglePull(pity, srPity, "perma");
       pity = newPity;
-      allPulls.push({ ...pull, pullNumber: allPulls.length + 1 });
+      srPity = newSrPity;
+      count++;
 
-      const title = pull.character.title;
-      if (selectedCharacters.includes(title) && !found.includes(title)) {
-        found.push(title);
+      if (
+        pull.character &&
+        selectedCharacters.includes(pull.character.title) &&
+        !found.includes(pull.character.title)
+      ) {
+        found.push(pull.character.title);
       }
+
+      pulls.push({ ...pull, pullNumber: count });
     }
 
-    const ssrFound = allPulls.filter(p => p.character.folder === "ssr").length;
-    const ssrAvg = ssrFound / allPulls.length;
-
-    setResults(allPulls);
     setFoundCharacters(found);
-    setPullCount(allPulls.length);
-    setSsrCount(ssrFound);
-    setSsrAverage(ssrAvg);
-    setLoading(false);
+    setPullResults(pulls);
+  };
+
+  const handleReset = () => {
+    setPullResults([]);
+    setFoundCharacters([]);
+  };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      setMaxPulls(value);
+      localStorage.setItem("howMuchToMax", value.toString());
+    }
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Drawer */}
-      <div
-        className={`transition-all duration-300 bg-black-100 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 overflow-y-auto ${
-          drawerOpen ? "w-72 p-4" : "w-0 p-0"
-        }`}
-      >
-        {drawerOpen && (
-          <>
-            <h2 className="text-lg font-bold mb-2 text-center">
-              Select characters
-            </h2>
+    <div className="p-4 flex h-[80vh] gap-4">
+      {/* Partie gauche */}
+      <div className="w-48 overflow-y-auto border rounded p-2 flex flex-col">
+        <h2 className="text-xl font-bold mb-4">Choisis tes persos</h2>
+        <div className="mb-2 flex flex-wrap gap-1">
+          {(["all", "ssr", "ml", "sr"] as FilterCategory[]).map((cat) => (
+            <button
+              key={cat}
+              className={`px-2 py-1 rounded text-sm font-semibold border ${
+                leftFilter === cat
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
+              onClick={() => setLeftFilter(cat)}
+            >
+              {cat === "all" ? "Tous" : cat.toUpperCase()}
+            </button>
+          ))}
+        </div>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          className="mb-3 px-2 py-1 border rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
-            <input
-              type="text"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full mb-4 p-2 rounded border border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
-            />
-
-            <div className="grid grid-cols-2 gap-2">
-              {folders.map(({ name, images }) =>
-                images
-                  .filter(
-                    (char) =>
-                      !["Lian", "Hoyan"].includes(char.title) &&
-                      char.title.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map((char) => (
-                    <button
-                      key={char.title}
-                      onClick={() => toggleCharacter(char.title)}
-                      className={`rounded border p-1 text-xs ${
-                        selectedCharacters.includes(char.title)
-                          ? "border-yellow-500"
-                          : "border-transparent"
-                      }`}
-                    >
-                      <img
-                        src={`/characters/${name}/${char.filename}`}
-                        alt={char.title}
-                        className="w-16 h-16 object-contain mx-auto"
-                      />
-                      <p className="text-[0.7rem]">{char.title}</p>
-                    </button>
-                  ))
-              )}
-            </div>
-          </>
-        )}
+        <div className="grid grid-cols-2 gap-2 flex-1 overflow-y-auto">
+          {filteredCharacters.map((char) => (
+            <button
+              key={char.title}
+              onClick={() => handleSelectCharacter(char.title)}
+              className={`flex flex-col items-center border-2 rounded p-1 transition duration-200 ${
+                selectedCharacters.includes(char.title)
+                  ? "border-blue-500"
+                  : "border-transparent"
+              }`}
+            >
+              <img
+                src={`/characters/${char.folder}/${char.filename}`}
+                alt={char.title}
+                className="w-16 h-16 object-contain rounded"
+              />
+              <span className="text-xs font-medium mt-1 text-center">{char.title}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 p-4 overflow-y-auto text-center">
-        {/* Top Buttons */}
-        <div className="flex flex-wrap gap-2 justify-center items-center mb-4">
-          <button
-            onClick={() => setDrawerOpen(!drawerOpen)}
-            className="bg-gray-800 text-white px-3 py-2 rounded hover:bg-gray-700"
-          >
-            {drawerOpen ? "Hide Characters" : "Show Characters"}
-          </button>
-
+      {/* Partie droite */}
+      <div className="flex-1 flex flex-col">
+        <div className="mb-4 flex items-center gap-2">
+          <label htmlFor="maxPulls">Max pulls :</label>
+          <input
+            id="maxPulls"
+            type="number"
+            className="w-20 border rounded px-2 py-1 text-black"
+            value={maxPulls}
+            onChange={handleMaxChange}
+          />
           <button
             onClick={handleStart}
-            disabled={loading || selectedCharacters.length === 0}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
           >
-            {loading ? "Summoning..." : "Start"}
+            Start
           </button>
-
           <button
-            onClick={() => {
-              setShowSSRAndMLOnly(!showSSRAndMLOnly);
-              if (!showSSRAndMLOnly && showSROnly) setShowSROnly(false);
-            }}
-            className={`px-4 py-2 rounded border ${
-              showSSRAndMLOnly
-                ? "bg-yellow-400 text-black font-semibold"
-                : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
-            }`}
+            onClick={handleReset}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
           >
-            {showSSRAndMLOnly ? "Show All" : "Only SSR & ML"}
-          </button>
-
-          <button
-            onClick={() => {
-              setShowSROnly(!showSROnly);
-              if (!showSROnly && showSSRAndMLOnly) setShowSSRAndMLOnly(false);
-            }}
-            className={`px-4 py-2 rounded border ${
-              showSROnly
-                ? "bg-violet-400 text-black font-semibold"
-                : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
-            }`}
-          >
-            {showSROnly ? "Show All" : "Only SR"}
+            Reset
           </button>
         </div>
+        <label htmlFor="maxPulls">Filters :</label>
+          <div className="mb-4 flex items-center gap-2">
+          {(["all", "ssr", "ml", "sr"] as FilterCategory[]).map((cat) => (
+            <button
+              key={cat}
+              className={`px-4 py-2 rounded text-sm font-semibold border ${
+                rightFilter === cat
+                  ? "bg-green-600 text-white border-green-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
+              onClick={() => setRightFilter(cat)}
+            >
+              {cat === "all" ? "Tous" : cat.toUpperCase()}
+            </button>
+          ))}
+        </div>
 
-        {/* Result */}
-        {pullCount > 0 && (
-          <div>
-            <h2 className="text-lg font-semibold mb-1">
-              Total Pulls: {pullCount}
-            </h2>
-            <p className="text-sm text-white-700 dark:text-gray-300 mb-4">
-              SSR: {ssrCount} pulls ({(ssrAverage * 100).toFixed(2)}%)
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {results
-                .filter((pull) => {
-                  if (showSSRAndMLOnly)
-                    return (
-                      pull.character.folder === "ssr" ||
-                      pull.character.folder === "ml"
-                    );
-                  if (showSROnly) return pull.character.folder === "sr";
-                  return true;
-                })
+        {pullResults.length > 0 && (
+          <div className="overflow-auto flex-1">
+            <h3 className="text-xl font-semibold mb-2">Résultats :</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+              {pullResults
+                .filter(
+                  (pull) =>
+                    rightFilter === "all" || pull.character.folder === rightFilter
+                )
                 .map((pull, i) => {
+                  if (!pull?.character) return null;
+                  const { character, pityType, pullNumber } = pull;
+                  const { folder, filename, title } = character;
+
                   const pityColor =
-                    pull.pityType === "hard pity"
+                    pityType === "hard pity"
                       ? "border-red-500"
-                      : pull.pityType === "soft pity"
+                      : pityType === "soft pity"
                       ? "border-orange-400"
                       : "border-gray-300";
+
                   const bg =
-                    pull.character.folder === "ssr"
+                    folder === "ssr"
                       ? "bg-yellow-200"
-                      : pull.character.folder === "ml"
+                      : folder === "ml"
                       ? "bg-pink-200"
-                      : pull.character.folder === "sr"
+                      : folder === "sr"
                       ? "bg-violet-200"
                       : "bg-blue-100";
 
                   const isTargetFound =
-                    selectedCharacters.includes(pull.character.title) &&
-                    foundCharacters.includes(pull.character.title);
+                    selectedCharacters.includes(title) &&
+                    foundCharacters.includes(title);
 
                   return (
                     <div
-                      key={`${pull.timestamp}-${i}`}
+                      key={`${title}-${i}`}
                       className={`relative border-2 ${pityColor} ${bg} rounded p-2 w-28 overflow-hidden`}
                     >
                       {isTargetFound && (
@@ -225,16 +247,14 @@ const HowMuchTo: React.FC = () => {
                       )}
                       <div className="relative z-10">
                         <img
-                          src={`/characters/${pull.character.folder}/${pull.character.filename}`}
-                          alt={pull.character.title}
+                          src={`/characters/${folder}/${filename}`}
+                          alt={title}
                           className="w-full h-24 object-contain rounded"
                         />
-                        <p className="text-xs font-bold text-black dark:text-white mt-1">
-                          {pull.character.title}
-                        </p>
-                        {pull.pityType !== "no pity" && (
+                        <p className="text-xs font-bold text-black mt-1">{title}</p>
+                        {pityType !== "no pity" && (
                           <p className="text-xs capitalize text-red-500 font-semibold">
-                            {pull.pityType}
+                            {pityType}
                           </p>
                         )}
                         <p
@@ -248,7 +268,7 @@ const HowMuchTo: React.FC = () => {
                             color: "black",
                           }}
                         >
-                          Pull #{pull.pullNumber}
+                          Pull #{pullNumber}
                         </p>
                       </div>
                     </div>
@@ -260,6 +280,4 @@ const HowMuchTo: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default HowMuchTo;
+}
