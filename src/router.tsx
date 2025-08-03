@@ -8,6 +8,7 @@ import TierMaker from './pages/TierMaker/TierMaker';
 import TeamMaker from './pages/TeamMaker';
 import Countdown from './pages/CountdownPage';
 import HowMuchTo from './pages/HowMuchTo';
+import Exp33 from './pages/Exp33';
 
 const Router = () => {
   return (
@@ -20,6 +21,7 @@ const Router = () => {
       <Route path="/teammaker" element={<TeamMaker />} />
       <Route path="/Countdown" element={<h1><Countdown /></h1>} />
       <Route path="/HowMuchTo" element={<h1><HowMuchTo /></h1>} />
+      <Route path="/exp33" element={<h1><Exp33 /></h1>} />
       <Route path="*" element={<h1>404 - Page not found</h1>} />
     </Routes>
   );

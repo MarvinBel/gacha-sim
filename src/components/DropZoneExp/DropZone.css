@@ -1,0 +1,95 @@
+.container {
+    width: 80%;
+    padding-left: 10%;
+    height: 1000px;
+    padding-top: 30px;
+    .clear-button {
+        font-size: 20px;
+        background-color: black;
+        color: white;
+        margin-bottom: 15px;
+        border-radius: 3px;
+    }
+    .button-dropdown {
+        width: 150px;
+        margin-top: 15px;
+        font-size: 20px;
+        background-color: black;
+        color: white;
+        border-radius: 3px;
+    }
+    .container-option-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0;
+        .option {
+            width: 150px;
+            font-size: 20px;
+            color: white;
+            text-align: center;
+            background-color: black;
+            margin: 0;
+            border: 1px solid gold;
+        }
+    }
+    .tab {
+        margin-right: 10px;
+    }
+    .item-charcater {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80px;
+        .image-character {
+            width: 80px;
+            height: 80px;
+        }
+        .text-character {
+            overflow: hidden;
+            text-wrap: nowrap;
+            max-width: 74px;
+        }
+    }
+    .tier-container {
+        width: auto;
+        flex-wrap: wrap;
+        height: auto;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        
+        .tier-name {
+            font-size: 50px;
+            margin-right: 40px;
+        }
+    }
+    .drop-zone {
+        display: flex;
+    }
+    .container-list-item {
+        flex-wrap: wrap;
+        display: flex;
+        margin-top: 15px;
+        gap: 3px;
+    }
+}
+
+.dark {
+    background-color: black;
+    color: white;
+}
+
+.violet {
+    background-color: violet;
+    color: white;
+}
+
+.lightblue {
+    background-color: lightblue;
+    color: white;
+}
+.yellow {
+    background-color: yellow;
+    color: black;
+}

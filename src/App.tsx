@@ -38,30 +38,6 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Navbar />
-      <a
-  href="https://ko-fi.com/I2I71FZBQN"
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="Support me on Ko-fi"
-  style={{
-    position: "fixed",
-    top: 16,
-    right: 136,
-    width: 140,
-    height: 44,
-    borderRadius: "50%",
-    backgroundColor: theme === "light" ? "#f0f0f0" : "#333",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 9999,
-    cursor: "pointer",
-  }}
->
-  <a href='https://ko-fi.com/I2I71FZBQN' target='_blank'><img height='36' style={{border:'0px', height: '36px'}} src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' alt='Buy Me a Coffee at ko-fi.com' /></a>
-</a>
-
       <button
         onClick={openChangelog}
         aria-label="Display changelog"
@@ -88,7 +64,6 @@ const App: React.FC = () => {
         {"📝"}
       </button>
 
-      {/* Bouton toggle thème */}
       <button
         onClick={toggleTheme}
         aria-label="Toggle dark mode"
@@ -115,7 +90,6 @@ const App: React.FC = () => {
         {theme === "light" ? "🌙" : "☀️"}
       </button>
 
-      {/* Modale changelog */}
       <Changelog open={changelogOpen} handleClose={closeChangelog} />
 
       <div style={{ paddingTop: 8 }}>

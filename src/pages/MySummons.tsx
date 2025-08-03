@@ -4,117 +4,102 @@ import { Summon } from '../types/types';
 
 const MySummons: React.FC = () => {
   const [summons, setSummons] = useState<(Summon & { pullNumber: number })[]>([]);
-  const [showSSRAndMLOnly, setShowSSRAndMLOnly] = useState(false);
+  const [onlyRare, setOnlyRare] = useState(false);
 
   useEffect(() => {
-    const stored = getSummons();
-    const enriched = stored.map((s, i) => ({
+    const data = getSummons();
+    const summNum = data.map((s, i) => ({
       ...s,
-      pullNumber: stored.length - i,
+      pullNumber: data.length - i,
     }));
-    setSummons(enriched);
+    setSummons(summNum);
   }, []);
 
-  const handleClearSummons = () => {
+  const handleClear = () => {
     clearSummons();
     resetSummonCount();
     setSummons([]);
   };
 
-  const filteredSummons = showSSRAndMLOnly
-    ? summons.filter(s => ['ssr', 'ml'].includes(s.character.folder))
+  const filtered = onlyRare
+    ? summons.filter(summon => ['ssr', 'ml'].includes(summon.character.folder))
     : summons;
+  const theme = localStorage.getItem('theme');
+  const isDark = theme === 'dark';
 
   return (
-    <div style={{ padding: 20 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>My Summons</h1>
-        <h2>Total summons: {getSummonCount()}</h2>
+    <div className="p-5">
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-bold">My Summons</h1>
+        <h2 className="text-lg font-semibold">Total: {getSummonCount()}</h2>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: 20 }}>
+      <div className="flex gap-4 mb-5 flex-wrap">
         <button
-          onClick={() => setShowSSRAndMLOnly(prev => !prev)}
-          style={{
-            padding: '0.5rem 1rem',
-            borderRadius: 6,
-            cursor: 'pointer',
-            backgroundColor: showSSRAndMLOnly ? '#007bff' : '#ddd',
-            color: showSSRAndMLOnly ? 'white' : 'black',
-            border: 'none'
-          }}
+          onClick={() => setOnlyRare(prev => !prev)}
+          className={`px-4 py-2 rounded font-semibold text-sm transition-colors duration-200 ${
+            onlyRare
+              ? 'bg-blue-600 text-white'
+              : isDark
+              ? 'bg-black text-gray-300 border border-gray-300'
+              : 'bg-gray-300 text-black'
+          }`}
         >
-          {showSSRAndMLOnly ? 'Show All' : 'Only SSR & ML'}
+          {onlyRare ? 'Show All' : 'Only SSR & ML'}
         </button>
 
         <button
-          onClick={handleClearSummons}
-          style={{
-            padding: '0.5rem 1rem',
-            borderRadius: 6,
-            cursor: 'pointer',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none'
-          }}
+          onClick={handleClear}
+          className="px-4 py-2 rounded bg-red-600 text-white font-semibold text-sm cursor-pointer"
         >
-          Clear All Summons
+          Clear All
         </button>
       </div>
 
-      {filteredSummons.length === 0 ? (
-        <p>No summons found.</p>
+      {filtered.length === 0 ? (
+        <p>No summons yet.</p>
       ) : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          {filteredSummons.map((s, idx) => {
-            const pityColor =
-              s.pityType === 'hard pity' ? 'red' :
-              s.pityType === 'soft pity' ? 'orange' : '#aaa';
-
-            const bgColor =
-              s.character.folder === 'ssr' ? 'yellow' :
-              s.character.folder === 'ml' ? 'pink' :
-              s.character.folder === 'sr' ? 'violet' : 'lightblue';
-
+        <div className="flex flex-wrap gap-3">
+          {filtered.map((s, i) => {
+            const border =
+              s.pityType === 'hard pity'
+                ? 'border-red-500'
+                : s.pityType === 'soft pity'
+                ? 'border-orange-500'
+                : 'border-gray-400';
+            const bg =
+              s.character.folder === 'ssr'
+                ? 'bg-yellow-200'
+                : s.character.folder === 'ml'
+                ? 'bg-pink-200'
+                : s.character.folder === 'sr'
+                ? 'bg-violet-200'
+                : 'bg-blue-200';
             return (
               <div
-                key={`${s.timestamp}-${idx}`}
-                style={{
-                  width: 120,
-                  textAlign: 'center',
-                  border: `2px solid ${pityColor}`,
-                  backgroundColor: bgColor,
-                  borderRadius: 8,
-                  padding: 8,
-                  position: 'relative',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  height: 200,
-                }}
+                key={i}
+                className={`w-[120px] h-[200px] flex flex-col justify-between text-center rounded p-2 border-2 shadow-sm ${border} ${bg}`}
               >
-                <div>
-                  <img
-                    src={`/characters/${s.character.folder}/${s.character.filename}`}
-                    alt={s.character.title}
-                    style={{ width: '100%', height: 100, objectFit: 'contain', borderRadius: 6 }}
-                  />
-                  <p style={{ fontWeight: 'bold', margin: 4 }}>{s.character.title}</p>
-                  {s.pityType !== 'no pity' && (
-                    <p style={{ fontSize: '0.9rem', color: pityColor }}>{s.pityType}</p>
-                  )}
-                </div>
-                <p
-                        style={{
-                          fontSize: "0.7rem",
-                          fontWeight: "bold",
-                          background: "#fff",
-                          padding: "2px 6px",
-                          borderRadius: 4,
-                          boxShadow: "0 0 2px rgba(0,0,0,0.2)",
-                          color: "black",
-                        }}
-                      >
+                <img
+                  src={`/characters/${s.character.folder}/${s.character.filename}`}
+                  alt={s.character.title}
+                  className="w-full h-[100px] object-contain rounded"
+                />
+                <p className="font-bold my-1 text-sm">{s.character.title}</p>
+                {s.pityType !== 'no pity' && (
+                  <p
+                    className={`text-xs font-semibold capitalize text-black ${
+                      s.pityType === 'hard pity'
+                        ? 'text-red-500'
+                        : s.pityType === 'soft pity'
+                        ? 'text-orange-500'
+                        : ''
+                    }`}
+                  >
+                    {s.pityType}
+                  </p>
+                )}
+                <p className="text-[0.7rem] font-bold bg-white px-2 py-1 rounded shadow-sm text-black">
                   #{s.pullNumber}
                 </p>
               </div>

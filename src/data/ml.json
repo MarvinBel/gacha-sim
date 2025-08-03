@@ -4,5 +4,7 @@
   { "filename": "Massiah.jpg", "title": "Massiah", "color": "yellow", "tags": ["dps", "debuff"], "role": ["dps"], "folder": "ml" },
   { "filename": "Lily.jpg", "title": "Lily", "color": "violet", "tags": ["buff", "follow-up", "delay", "speed", "advance"], "role": ["support"], "folder": "ml" },
   { "filename": "Sania_withered.jpg", "title": "Sania withered", "color": "violet", "tags": ["dot", "windup"], "role": ["dps"], "folder": "ml" },
-  { "filename": "Mio.png", "title": "Mio", "color": "yellow", "tags": ["cc", "delay", "advance"], "role": ["suppoet"], "folder": "ml"}
+  { "filename": "Mio.png", "title": "Mio", "color": "yellow", "tags": ["cc", "delay", "advance"], "role": ["support"], "folder": "ml"},
+  { "filename": "Yeli.png", "title": "Yeli", "color": "yellow", "tags": ["buff steal", "debuff"], "role": ["dps"], "folder": "ml"},
+  { "filename": "Liliam.png", "title": "Liliam", "color": "violet", "tags": ["cc", "shield ignore"], "role": ["dps"], "folder": "ml"}
 ]

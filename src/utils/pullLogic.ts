@@ -10,7 +10,7 @@ interface PullResult {
   newSrPity: number;
 }
 
-export function performSinglePull(pityCount: number, banner: Banner, srPityCount: number): PullResult {
+export function performSinglePull(pityCount: number,  srPityCount: number, banner: Banner): PullResult {
   const pssr = getCharactersByFolderName('ssr').filter(character => character.title !== 'Lian');
   const ssr = pssr.filter(character => character.title !== 'Hoyan');
   const ml = getCharactersByFolderName('ml');
@@ -156,7 +156,7 @@ export function performMultiPull(pityCount: number, srPityCount: number, banner:
   let newPity = pityCount;
   let newSrPity = srPityCount;
   for (let i = 0; i < 10; i++) {
-    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, banner, newSrPity);
+    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, newSrPity, banner);
     pulls.push(pull);
     newPity = updatedPity;
     newSrPity = updatedSR;
@@ -169,7 +169,7 @@ export function perform85Pull(pityCount: number, srPityCount: number, banner: Ba
   let newPity = pityCount;
   let newSrPity = srPityCount;
   for (let i = 0; i < 85; i++) {
-    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, banner, newSrPity);
+    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, newSrPity, banner);
     pulls.push(pull);
     newPity = updatedPity;
     newSrPity = updatedSR;
@@ -182,7 +182,7 @@ export function performCustomPull(pityCount: number, srPityCount: number, banner
   let newPity = pityCount;
   let newSrPity = srPityCount;
   for (let i = 0; i < custom; i++) {
-    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, banner, newSrPity);
+    const { pull, newPity: updatedPity, newSrPity: updatedSR } = performSinglePull(newPity, newSrPity, banner);
     pulls.push(pull);
     newPity = updatedPity;
     newSrPity = updatedSR;

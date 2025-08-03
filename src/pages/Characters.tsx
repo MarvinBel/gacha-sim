@@ -1,3 +1,4 @@
+// Version Tailwind CSS du composant Characters
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
@@ -6,8 +7,6 @@ import mlImages from "../data/ml.json";
 import ssrImages from "../data/ssr.json";
 import srImages from "../data/sr.json";
 import rImages from "../data/r.json";
-
-import "./Characters.css";
 
 const folders = [
   { name: "ml", images: mlImages },
@@ -19,10 +18,10 @@ const folders = [
 const IMAGE_SIZE_PX = 72;
 
 const roleColors: Record<string, string> = {
-  support: "#4fc3f7",
-  dps: "#ef5350",
-  debuff: "#ab47bc",
-  sustain: "#66bb6a",
+  support: "bg-sky-400",
+  dps: "bg-red-400",
+  debuff: "bg-purple-400",
+  sustain: "bg-green-400",
 };
 
 const elementColors = ["red", "green", "blue", "yellow", "violet"];
@@ -41,9 +40,10 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
       window.localStorage.getItem("theme") === "dark"
         ? theme.palette.common.white
         : theme.palette.common.black,
-    color: window.localStorage.getItem("theme") === "dark"
-      ? "black"
-      : "white",
+    color:
+      window.localStorage.getItem("theme") === "dark"
+        ? "black"
+        : "white",
     fontSize: 11,
     padding: "6px 10px",
     borderRadius: 6,
@@ -72,111 +72,47 @@ const Characters: React.FC = () => {
 
   const isDark = window.localStorage.getItem("theme") === "dark";
 
-  const handleFilterColor = (color: string | null) => {
-    setSelectedColor(color);
-  };
-
-  const handleFilterRole = (role: string | null) => {
-    setSelectedRole(role);
-  };
-
   return (
-    <div style={{ padding: "1rem" }}>
-      {/* Element filter */}
-      <div style={{ marginBottom: "1rem", textAlign: "center" }}>
+    <div className="p-4">
+      <div className="mb-4 text-center">
         <strong>Filtrer par élément :</strong>
-        <div
-          style={{
-            marginTop: 8,
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: 8,
-          }}
-        >
+        <div className="mt-2 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => handleFilterColor(null)}
-            style={{
-              padding: "4px 12px",
-              borderRadius: 8,
-              border: "1px solid #999",
-              backgroundColor: selectedColor === null ? "white" : "#333",
-              color: selectedColor === null ? "black" : "white",
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: "0.8rem",
-            }}
+            onClick={() => setSelectedColor(null)}
+            className={`px-3 py-1 rounded border text-sm font-bold ${selectedColor === null ? "bg-white text-black border-gray-600" : "bg-gray-800 text-white border-gray-600"}`}
           >
             Tous
           </button>
           {elementColors.map((color) => (
             <button
               key={color}
-              onClick={() => handleFilterColor(color)}
-              style={{
-                border: selectedColor === color ? "px solid #333" : "1px solid #ccc",
-                borderRadius: "50%",
-                padding: 4,
-                backgroundColor: selectedColor === color ? "white": "#333",
-                cursor: "pointer",
-              }}
+              onClick={() => setSelectedColor(color)}
+              className={`p-1 rounded-full border ${selectedColor === color ? "bg-white border-gray-700" : "bg-gray-800 border-gray-300"}`}
             >
               <img
                 src={`/element/${color}.jpg`}
                 alt={color}
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  backgroundColor: "#fff",
-                }}
+                className="w-8 h-8 rounded-full bg-white"
               />
             </button>
           ))}
         </div>
       </div>
 
-      {/* Role filter */}
-      <div style={{ marginBottom: "1rem", textAlign: "center" }}>
+      <div className="mb-4 text-center">
         <strong>Filtrer par rôle :</strong>
-        <div
-          style={{
-            marginTop: 8,
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: 8,
-          }}
-        >
+        <div className="mt-2 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => handleFilterRole(null)}
-            style={{
-              padding: "4px 12px",
-              borderRadius: 8,
-              border: "1px solid #999",
-              backgroundColor: selectedRole === null ? "#555" : "#eee",
-              color: selectedRole === null ? "white" : "black",
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: "0.8rem",
-            }}
+            onClick={() => setSelectedRole(null)}
+            className={`px-3 py-1 rounded border text-sm font-bold ${selectedRole === null ? "bg-gray-700 text-white" : "bg-gray-100 text-black"}`}
           >
             Tous
           </button>
           {roleKeys.map((role) => (
             <button
               key={role}
-              onClick={() => handleFilterRole(role)}
-              style={{
-                border: selectedRole === role ? `2px solid ${roleColors[role]}` : "1px solid #ccc",
-                borderRadius: 8,
-                padding: "4px 10px",
-                backgroundColor: selectedRole === role ? roleColors[role] : "#fff",
-                color: selectedRole === role ? "#fff" : "#000",
-                cursor: "pointer",
-                fontWeight: "600",
-                textTransform: "capitalize",
-              }}
+              onClick={() => setSelectedRole(role)}
+              className={`px-2 py-1 rounded font-semibold capitalize border ${selectedRole === role ? `${roleColors[role]} text-white border-transparent` : "bg-white text-black border-gray-300"}`}
             >
               {role}
             </button>
@@ -185,33 +121,17 @@ const Characters: React.FC = () => {
       </div>
 
       {folders.map(({ name, images }) => (
-        <section key={name} className="charBorders">
+        <section key={name} className="mb-6">
           <div
-            className="charSectionTitleCont"
+            className="flex items-center gap-2 cursor-pointer border-b pb-1"
             onClick={() => toggleSection(name)}
           >
-            <button
-              aria-label={`${
-                openSections[name] ? "Fermer" : "Ouvrir"
-              } la section ${name}`}
-              className="charDrawerButton"
-            >
-              {openSections[name] ? "−" : "+"}
-            </button>
-            <h2 style={{ margin: 0 }}>{name.toUpperCase()}</h2>
+            <button className="text-xl font-bold">{openSections[name] ? "−" : "+"}</button>
+            <h2 className="text-lg font-semibold uppercase m-0">{name}</h2>
           </div>
 
           {openSections[name] && (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "0.5rem",
-                maxHeight: "calc(100vh - 150px)",
-                overflowY: "auto",
-                justifyContent: "center",
-              }}
-            >
+            <div className="flex flex-wrap gap-2 max-h-[calc(100vh-150px)] overflow-y-auto justify-center mt-2">
               {images
                 .filter(({ color, role }) =>
                   (!selectedColor || color === selectedColor) &&
@@ -223,78 +143,29 @@ const Characters: React.FC = () => {
                     title={tags.length > 0 ? tags.join(", ") : "Aucun tag"}
                     placement="top"
                   >
-                    <div
-                      style={{
-                        width: IMAGE_SIZE_PX,
-                        textAlign: "center",
-                        position: "relative",
-                        fontSize: "0.6rem",
-                        cursor: "default",
-                      }}
-                    >
-                      {/* Char pic */}
+                    <div className="w-[72px] text-center relative text-xs cursor-default">
                       <img
                         src={`/characters/${name}/${filename}`}
                         alt={title}
-                        style={{
-                          width: IMAGE_SIZE_PX,
-                          height: IMAGE_SIZE_PX,
-                          borderRadius: 8,
-                          objectFit: "contain",
-                        }}
+                        className="w-[72px] h-[72px] rounded object-contain"
                       />
-
-                      {/* Char Elem */}
                       <img
                         src={`/element/${color}.jpg`}
                         alt={color}
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          right: 0,
-                          width: 20,
-                          height: 20,
-                          borderRadius: "50%",
-                          backgroundColor: isDark ? "#222" : "white",
-                          padding: 1,
-                        }}
+                        className={`absolute top-0 right-0 w-5 h-5 rounded-full p-0.5 ${isDark ? "bg-gray-800" : "bg-white"}`}
                       />
-
-                      {/* Char name */}
                       <p
-                        style={{
-                          fontSize: "0.65rem",
-                          margin: "2px 0 0 0",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          fontWeight: 600,
-                          color: isDark ? "#eee" : "#222",
-                        }}
+                        className={`text-[0.65rem] mt-1 font-semibold truncate ${isDark ? "text-gray-200" : "text-gray-800"}`}
                         title={title}
                       >
                         {title}
                       </p>
-
-                      {/* Roles */}
                       {role.length > 0 && (
-                        <div style={{ marginTop: 2 }}>
+                        <div className="mt-1 flex flex-wrap justify-center gap-0.5">
                           {role.map((r) => (
                             <span
                               key={r}
-                              style={{
-                                display: "inline-block",
-                                backgroundColor:
-                                  roleColors[r] || (isDark ? "#444" : "#ccc"),
-                                color: isDark ? "#fff" : "#000",
-                                padding: "2px 6px",
-                                borderRadius: "999px",
-                                fontSize: "0.55rem",
-                                fontWeight: 600,
-                                boxShadow: "0 0 2px rgba(0, 0, 0, 0.3)",
-                                marginTop: 2,
-                                textTransform: "capitalize",
-                              }}
+                              className={`inline-block px-2 py-0.5 rounded-full text-[0.55rem] font-semibold capitalize shadow-sm ${roleColors[r] || (isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-black")}`}
                             >
                               {r}
                             </span>
