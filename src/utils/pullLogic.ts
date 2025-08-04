@@ -1,3 +1,4 @@
+import { incrementSummonCount } from '../services/StorageService';
 import type { Summon, Character } from '../types/types';
 import { getSoftPityBonus, getCharactersByFolderName, weightedRandom, randomItem } from './pullUtils';
 
@@ -145,8 +146,7 @@ export function performSinglePull(pityCount: number,  srPityCount: number, banne
     timestamp: Date.now(),
   };
 
-  const count = parseInt(localStorage.getItem('summonCount') || '0', 10);
-  localStorage.setItem('summonCount', (count + 1).toString());
+  incrementSummonCount(1)
 
   return { pull, newPity: pityCount, newSrPity: srPityCount };
 }

@@ -54,6 +54,7 @@ export const setSummonCount = (count: number) => {
 export const incrementSummonCount = (by: number = 1) => {
   const current = getSummonCount();
   setSummonCount(current + by);
+  console.log("summoncount == " + Cookies.get(SUMMON_COUNT_KEY))
 };
 
 export const resetSummonCount = () => {

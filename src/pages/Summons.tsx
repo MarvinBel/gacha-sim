@@ -8,7 +8,9 @@ import {
 } from '../utils/pullLogic';
 import {
   saveSummon,
-  clearSummons
+  clearSummons,
+  setSummonCount,
+  getSummonCount
 } from '../services/StorageService';
 import { Summon } from '../types/types';
 
@@ -39,7 +41,7 @@ const Summons: React.FC = () => {
   useEffect(() => {
     if (showSSRAndMLOnly && showSROnly) setShowSSRAndMLOnly(false);
   }, [showSROnly]);
-
+  
   const handlePull = (type: 'x1' | 'x10' | 'x85' | 'custom') => {
     let pulls: Summon[] = [];
     let newPity = pityCounter;
@@ -84,24 +86,25 @@ const Summons: React.FC = () => {
     setCurrentPulls([]);
     setPityCounter(0);
     setSrPityCounter(0);
+    setSummonCount(0);
   };
 
   const isDark = localStorage.getItem('theme') === 'dark';
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <aside className={`w-[5%] p-4 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+      <aside className={`w-auto flex flex-col p-4 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
         {['Limited', 'Perma', 'ML'].map((type) => (
           <button
             key={type}
             onClick={() => setSelectedType(type)}
-            className={`block mb-4 px-4 py-3 w-full text-base rounded ${
+            className={`mb-4 w-auto text-base rounded ${
               selectedType === type
                 ? 'border-2 border-blue-600'
-                : 'border border-gray-300'
+                : ''
             } ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}
           >
-            {type}
+          <img className={'w-[100%]'} src={'/banners/'+type+'.png'}/>
           </button>
         ))}
       </aside>
@@ -110,7 +113,7 @@ const Summons: React.FC = () => {
         {selectedType ? (
           <>
             <h2 className="text-xl font-bold mb-2">{selectedType} Summon</h2>
-            <p>Compteur de summon total : {localStorage.getItem('summonCount')}</p>
+            <p>Compteur de summon total : {getSummonCount()}</p>
             <p className="mb-4 font-bold text-lg">Compteur de pity actuel : {pityCounter}</p>
 
             <div className="flex flex-wrap gap-4 mb-4">
@@ -122,7 +125,7 @@ const Summons: React.FC = () => {
                 value={custom}
                 onChange={handleChangeCustom}
                 min={0}
-                className="w-20 px-2 py-1 border border-gray-400 rounded"
+                className="w-20 px-2 py-1 border border-gray-400 rounded text-black"
               />
               <button onClick={() => handlePull('custom')} className="px-6 py-2 rounded bg-red-600 text-white">
                 Pull {custom}
