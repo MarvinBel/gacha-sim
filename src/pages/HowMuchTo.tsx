@@ -27,7 +27,7 @@ interface PullResult {
   pullNumber: number;
 }
 
-type FilterCategory = "all" | "ssr" | "ml" | "sr";
+type FilterCategory = "all" | "ssr" | "ml" | "sr" | "ssrml";
 
 export default function HowMuchTo() {
   const allCharacters: { folder: string; title: string; filename: string }[] = folders.flatMap(
@@ -56,9 +56,7 @@ export default function HowMuchTo() {
 
   const handleSelectCharacter = (title: string) => {
     setSelectedCharacters((prev) =>
-      prev.includes(title)
-        ? prev.filter((t) => t !== title)
-        : [...prev, title]
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
     );
   };
 
@@ -177,9 +175,10 @@ export default function HowMuchTo() {
             Reset
           </button>
         </div>
-        <label htmlFor="maxPulls">Filters :</label>
-          <div className="mb-4 flex items-center gap-2">
-          {(["all", "ssr", "ml", "sr"] as FilterCategory[]).map((cat) => (
+
+        <label>Filters :</label>
+        <div className="mb-4 flex items-center gap-2">
+          {(["all", "ssr", "ml", "sr", "ssrml"] as FilterCategory[] | "ssrml"[]).map((cat) => (
             <button
               key={cat}
               className={`px-4 py-2 rounded text-sm font-semibold border ${
@@ -187,9 +186,13 @@ export default function HowMuchTo() {
                   ? "bg-green-600 text-white border-green-600"
                   : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
               }`}
-              onClick={() => setRightFilter(cat)}
+              onClick={() => setRightFilter(cat as FilterCategory)}
             >
-              {cat === "all" ? "Tous" : cat.toUpperCase()}
+              {cat === "all"
+                ? "Tous"
+                : cat === "ssrml"
+                ? "SSR & ML"
+                : cat.toUpperCase()}
             </button>
           ))}
         </div>
@@ -199,10 +202,12 @@ export default function HowMuchTo() {
             <h3 className="text-xl font-semibold mb-2">Résultats :</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
               {pullResults
-                .filter(
-                  (pull) =>
-                    rightFilter === "all" || pull.character.folder === rightFilter
-                )
+                .filter((pull) => {
+                  if (rightFilter === "all") return true;
+                  if (rightFilter === "ssrml")
+                    return pull.character.folder === "ssr" || pull.character.folder === "ml";
+                  return pull.character.folder === rightFilter;
+                })
                 .map((pull, i) => {
                   if (!pull?.character) return null;
                   const { character, pityType, pullNumber } = pull;
@@ -225,8 +230,7 @@ export default function HowMuchTo() {
                       : "bg-blue-100";
 
                   const isTargetFound =
-                    selectedCharacters.includes(title) &&
-                    foundCharacters.includes(title);
+                    selectedCharacters.includes(title) && foundCharacters.includes(title);
 
                   return (
                     <div
