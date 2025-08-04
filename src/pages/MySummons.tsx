@@ -85,7 +85,7 @@ const MySummons: React.FC = () => {
                   alt={s.character.title}
                   className="w-full h-[100px] object-contain rounded"
                 />
-                <p className="font-bold my-1 text-sm">{s.character.title}</p>
+                <p className="font-bold my-1 text-sm text-black">{s.character.title}</p>
                 {s.pityType !== 'no pity' && (
                   <p
                     className={`text-xs font-semibold capitalize text-black ${
